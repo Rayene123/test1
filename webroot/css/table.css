@@ -1,0 +1,58 @@
+table.sleek {
+    width: 96%;
+    height: 60%;
+    border-collapse: collapse;
+    overflow-y: auto;
+    overflow-x: auto;
+    margin-left: 2%;
+    margin-right: 2%;
+    font-size: 1rem;
+    color: white;
+    border: 0;
+    border-bottom: 0.16rem solid white;
+}
+
+table.sleek thead, table.sleek tbody, table.sleek tr, table.sleek th, table.sleek td {
+    color:white;
+}
+
+table.sleek thead {
+    background-color: transparent;
+}
+
+table.sleek thead > tr:first-child {
+    background-color: transparent;
+}
+
+table.sleek tr {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+table.sleek tr.selected {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+table.sleek th.capital {
+    text-transform: capitalize;
+}
+
+table.sleek th, table.sleek  td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 0.08rem solid white;
+}
+
+table.sleek thead {
+    border-bottom: 0.16rem solid white;
+}
+
+div.table-img-wrapper {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/** FIXME center image**/
+div.table-img-wrapper > img {
+    height: 100%;
+    width: 100%;
+}

@@ -1,0 +1,65 @@
+nav {
+    background-color: white;
+    color: black;
+    width: 100%;
+    font-size: 30px;
+    position: fixed;
+    z-index: 10;
+    overflow: hidden;
+}
+
+.nav-height {
+    height: 3.6rem;
+}
+
+.shadow {
+    -webkit-box-shadow : 0 3px 3px -2px #000000; 
+    -moz-box-shadow : 0 3px 3px -2px #000000;
+    -ms-box-shadow : 0 3px 3px -2px #000000;
+    -o-box-shadow : 0 3px 3px -2px #000000;
+    box-shadow : 0 3px 3px -2px #000000;
+}
+
+#nav-logo-wrapper {
+    z-index: 11;
+    float: left;
+	/* position: relative; needed??? */
+	width: 5rem;
+	height: 100%;
+}
+
+#nav-logo {
+    border-radius: 0px 4px 4px 4px;
+    height: 100%;
+    width: auto;
+}
+
+div.nav-links {
+    
+}
+
+a.nav-link {
+    text-decoration: none;
+    z-index: 11;
+    display: inline-block;
+    height: 100%;
+    justify-self: center;
+    align-self: center;
+    width: 5rem;
+
+    color: #3E3E3E;
+    transition: all .35s ease;
+    -webkit-transition: all .35s ease;
+}
+
+a.nav-link:hover {
+    text-decoration: none;
+    color: #181818;
+    transition: all .35s ease;
+    -webkit-transition: all .35s ease;
+}
+
+#nav-space-placeholder {
+	z-index: -1;
+    left: 0;
+}

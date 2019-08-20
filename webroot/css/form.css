@@ -1,0 +1,11 @@
+/* override some things in base.css */
+div.main-content label {
+    cursor: auto;
+    color: white;
+}
+
+div.main-content div.error-message {
+    /** FIXME style **/
+    color:red;
+    font-size: 0.8rem;
+}

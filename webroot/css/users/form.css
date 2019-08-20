@@ -1,0 +1,30 @@
+div.user-form {
+    align-content: center;
+    text-align: center;
+}
+
+div.user-form .pad {
+    padding-top: 1.5rem;
+}
+
+div.user-form .pad-bottom {
+    padding-bottom: 1.5rem;
+}
+
+div.user-form .field-name {
+    text-align: right;
+}
+
+div.user-form button.submit {
+    background-color: #3E3E3E;
+    border-radius: 0.5rem;
+    padding: 0.6rem 1.2rem 0.6rem 1.2rem;
+}
+
+div.user-form button.submit:hover {
+    background-color: #181818;
+}
+
+div.user-form p {
+    font-size: 0.8rem;
+}
