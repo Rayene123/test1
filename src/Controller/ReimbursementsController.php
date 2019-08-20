@@ -167,6 +167,38 @@ class ReimbursementsController extends AppController
         $this->hardDelete($this->Reimbursements, $id, $this->redirect(['action' => 'index']), 'reimbursement');
     }
 
+    public function test() {
+        $maxNumReceipts = 1;
+        $this->loadModel('Documents');
+        $documents = [];
+        $receipts = [];
+        for ($k=0; $k<$maxNumReceipts; $k++) {
+            $documents[] = $this->Documents->newEntity();
+            $receipts[] = $this->Reimbursements->Receipts->newEntity();
+        }
+
+        if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $numReceipts = $data['numreceipts'];
+            $this->log('trying to save ' . $numReceipts . ' receipts', 'debug'); //FIXME remove
+            $this->log($data, 'debug'); //FIXME remove
+            for ($k=0; $k<$numReceipts; $k++) {
+                $this->log('here', 'debug'); //FIXME remove
+                $documents[$k] = $this->Documents->patchEntity($documents[$k], $data['documents'][$k]);
+                $receipts[$k] = $this->Reimbursements->Receipts->patchEntity($documents[$k], $data['receipts'][$k]);
+            }
+
+            // if ($this->Documents->save($document)) {
+            //     $this->Flash->success(__('The document has been saved.'));
+            //     return $this->redirect(['action' => 'index']);
+            // }
+            // else
+                $this->Flash->error(__("The document couldn't be saved"));
+        }
+
+        $this->set(compact('maxNumReceipts', 'documents', 'receipts'));
+    }
+
     /**
     * Add method
     *
