@@ -19,6 +19,15 @@ use Cake\ORM\Entity;
  */
 class Document extends Entity
 {
+    private $Folders; //FIXME make static??
+    protected $folderName;
+
+    public function initialize() {
+        parent::initialize();
+        $this->Folders = TableRegistry::get('Folders');
+        $this->folderName = null;
+    }
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -36,6 +45,48 @@ class Document extends Entity
         'uploaded' => true,
         'folder_id' => true,
         'user' => true,
-        'folder' => true
+        'folder' => true,
+
+        'temp' => true
     ];
+
+    protected function _getTemp() {
+        $key = 'temp';
+        $prop = $this->_properties;
+        if (isset($prop[$key]))
+            return $prop[$key];
+        return null;
+    }
+
+    protected function _getFullPath() {
+        $prop = $this->_properties;
+        if (!isset($prop['filename']) || !isset($prop['extension']))
+            return null;
+        return $this->_getFolderName() . $prop['filename'] . '.' . $prop['extension'];
+    }
+
+    protected function _setFullPath() {
+        //do nothing
+    }
+
+    protected function _getFolderName() {
+        if (!is_null($this->folderName))
+            return $this->folderName;
+        
+        $prop = $this->_properties;
+        $this->folderName = WWW_ROOT; //FIXME??
+        if (isset($prop['folder_id'])) {
+            $folder = $folder . $this->Folders
+                ->find()
+                ->where(['id' => $prop['folder_id']])
+                ->first();
+            if (!\is_null($folder))
+                $this->folderName .= $folder;
+        }
+        return $this->folderName;
+    }
+
+    protected function _setFolderName() {
+        //do nothing
+    }
 }

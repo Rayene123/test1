@@ -41,6 +41,7 @@ class ReceiptsTable extends Table
         $this->belongsTo('Documents')
             ->setJoinType('INNER')
             ->setDependent(true);
+            //->setCascadeCallbacks(true); //doesn't work if cascaded from reimbursements
     }
 
     /**
@@ -61,9 +62,9 @@ class ReceiptsTable extends Table
             ->notEmptyString('amount')
             ->add('amount', 'custom', [
                 'rule' => function ($value, $context) {
-                    return is_numeric($value) && 0.0 + $value < 1000;
+                    return is_numeric($value) && 0.0 + $value < 1000 && 0.0 + $value > 0;
                 },
-                'message' => 'Amount must be less than $1,000'
+                'message' => 'Amount must be greater than $0 and less than $1,000'
             ]);
 
         $validator
