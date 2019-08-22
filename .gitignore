@@ -5,7 +5,8 @@
 /logs/*
 /tmp/*
 /vendor/*
-/old-home/*
+# remove all below?? #
+/old-home/* 
 /personal-website-copy/*
 /sql-scripts/*
 /test-website/*
