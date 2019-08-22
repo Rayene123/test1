@@ -249,4 +249,14 @@ class ReimbursementsController extends AppController
         $reimbursement->receipts = $receipts;
         return $this->Reimbursements->save($reimbursement, ['associated' => ['OtherRiders', 'Receipts']]);
     }
+
+    private function updateOtherRiderData(&$data) {
+        $otherRiderData = &$data['other_riders'];
+        $otherRiderIDs = $otherRiderData['user_ids'];
+        if (!is_array($otherRiderIDs))
+            return;
+        foreach ($otherRiderIDs as $num => $id)
+            $otherRiderData[$num]['user_id'] = $id;
+        unset($otherRiderData['user_ids']);
+    }
 }
