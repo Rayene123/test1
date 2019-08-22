@@ -20,6 +20,7 @@ class ReimbursementsController extends AppController
         $this->loadModel('Users');
         $this->loadModel('Receipts');
         $this->loadModel('OtherRiders');
+        $this->loadModel('Documents');
 
         $this->loadComponent('DocumentsHelper');
     }
@@ -164,61 +165,47 @@ class ReimbursementsController extends AppController
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null) {
+        //FIXME make sure its the user's reimbursement or the treasurer
         $this->hardDelete($this->Reimbursements, $id, $this->redirect(['action' => 'index']), 'reimbursement');
     }
 
     public function test() {
-        $maxNumReceipts = 1;
-        $this->loadModel('Documents');
-        $documents = [];
-        $receipts = [];
-        for ($k=0; $k<$maxNumReceipts; $k++) {
-            $documents[] = $this->Documents->newEntity();
-            $receipts[] = $this->Reimbursements->Receipts->newEntity();
-        }
+        $maxNumReceipts = 4;
+        $reimbursement = $this->Reimbursements->newEntity();
+        $documents = $this->newEntities($this->Documents, $maxNumReceipts);
+        $receipts = $this->newEntities($this->Receipts, $maxNumReceipts);
 
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $numReceipts = $data['numreceipts'];
-            $this->log('trying to save ' . $numReceipts . ' receipts', 'debug'); //FIXME remove
-            $this->log($data, 'debug'); //FIXME remove
-            for ($k=0; $k<$numReceipts; $k++) {
-                $this->log('here', 'debug'); //FIXME remove
-                $documents[$k] = $this->Documents->patchEntity($documents[$k], $data['documents'][$k]);
-                $receipts[$k] = $this->Reimbursements->Receipts->patchEntity($documents[$k], $data['receipts'][$k]);
+            $includedDocuments = \array_slice($documents, 0, $numReceipts);
+            $includedReceipts = \array_slice($receipts, 0, $numReceipts);
+            $this->patchAll($this->Documents, $includedDocuments, $data['documents']);
+            $this->patchAll($this->Receipts, $includedReceipts, $data['receipts']);
+
+            $saveSuccess = $this->saveDocuments($includedDocuments);
+
+            if ($saveSuccess) {
+                foreach ($includedReceipts as $k => $receipt)
+                    $receipt->document_id = $includedDocuments[$k]->id;
+
+                $saveSuccess = $this->createReimbursement($data, $reimbursement, $includedReceipts);
+                if ($saveSuccess === false) {
+                    foreach ($includedDocuments as $document)
+                        $this->Documents->delete($document);
+                }
             }
 
-            // if ($this->Documents->save($document)) {
-            //     $this->Flash->success(__('The document has been saved.'));
-            //     return $this->redirect(['action' => 'index']);
-            // }
-            // else
-                $this->Flash->error(__("The document couldn't be saved"));
-        }
-
-        $this->set(compact('maxNumReceipts', 'documents', 'receipts'));
-    }
-
-    /**
-    * Add method
-    *
-    * @return \Cake\Http\Response|null Redirects to index.
-    */
-    public function add() {
-        //FIXME need to validate, make sure amount and file are nonempty for each receipt included. same with volunteer site
-        $reimbursement = $this->Reimbursements->newEntity();
-        if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            $this->updateOtherRiderData($data);
-            $reimbursement = $this->Reimbursements->patchEntity($reimbursement, $data, ['associated' => 'OtherRiders']);
-            if (!$reimbursement->errors()) {
-                $saveResult = $this->saveEverything($data, $reimbursement);
-                if ($saveResult === true) {
-                    $this->Flash->success(__('The reimbursement has been saved.'));
-                    return $this->redirect(['action' => 'index']);
-                }
-                else if ($saveResult !== false)
-                    $this->Flash->error(__($saveResult));
+            if ($saveSuccess) {
+                $this->Flash->success(__('The reimbursement has been saved.'));
+                return $this->redirect(['action' => 'index']);
+            }
+            else {
+                $this->log("Couldn't save reimbursement. Reimbursement, then document errors: ", 'debug');
+                $this->log($reimbursement->getErrors(), 'debug');
+                foreach ($includedDocuments as $document)
+                    $this->log($document->getErrors(), 'debug');
+                $this->Flash->error(__("The reimbursement couldn't be saved"));
             }
         }
 
@@ -227,57 +214,34 @@ class ReimbursementsController extends AppController
         $extraRiders = $this->Reimbursements->Users->find('list')
             ->where(['users.id !=' => 1])
             ->where(['users.id !=' => $this->Auth->user('id')]);
-        $this->set(compact('reimbursement', 'volunteerSites', 'extraRiders'));
+        $this->set(compact('reimbursement', 'documents', 'receipts', 'volunteerSites', 'extraRiders'));
     }
 
-    private function updateOtherRiderData(&$data) {
-        $otherRiderData = &$data['other_riders'];
-        $otherRiderIDs = $otherRiderData['user_ids'];
-        if (!is_array($otherRiderIDs))
-            return;
-        foreach ($otherRiderIDs as $num => $id)
-            $otherRiderData[$num]['user_id'] = $id;
-        unset($otherRiderData['user_ids']);
+    private function newEntities($table, $num) {
+        $entities = [];
+        for ($k = 0; $k < $num; $k++)
+            $entities[] = $table->newEntity();
+        return $entities;
     }
 
-    private function saveEverything($data, $reimbursement) {
-        //return ConnectionManager::get('default')->transactional(function () use ($data, $reimbursement) {
-        $this->DocumentsHelper->startNewSession();
-        try {
-            $receipts = [];
-            foreach ($data['receipts'] as $receiptIndex => $receiptData) {
-                $receipt = $this->Receipts->newEntity(['amount' => $receiptData['amount']]);
-                $receipts[] = $receipt;
-                if ($receipt->errors())
-                    break;
-                $name = $this->getReceiptFilename($reimbursement->date, $receiptIndex + 1);
-                $newDocumentResult = $this->DocumentsHelper->newDocumentEntity($receiptData['filestuff'], ['png', 'jpg', 'pdf'], $name);
-                if (is_string($newDocumentResult)) {
-                    $this->DocumentsHelper->deleteSessionFiles();
-                    return $newDocumentResult;
-                }
-                $receipt->document = $newDocumentResult;
-            }
-            $reimbursement->receipts = $receipts;
-            $saveSuccess = $this->Reimbursements->save($reimbursement, ['associated' => ['OtherRiders', 'Receipts', 'Receipts.Documents']]);
-            if (!$saveSuccess) {
-                $this->DocumentsHelper->deleteSessionFiles();
-                if ($reimbursement->errors())
-                    return false;
-                return "Reimbursement couldn't be saved. ";
-            }
-        }
-        catch (Exception $e) {
-            $this->DocumentsHelper->deleteSessionFiles();
-            return "Problem occurred. Reimbursement couldn't be saved. ";
-        }
-        return true;
+    private function patchAll($table, &$entities, $data) {
+        for ($k = 0; $k < count($entities); $k++)
+            $entities[$k] = $table->patchEntity($entities[$k], $data[$k]);
     }
 
-    private function getReceiptFilename($date, $receiptNum) {
-        $userFirstName = 'Test'; //FIXME 
-        $userLastName = 'Gal'; 
-        $dateString = $date->year . '-' . $date->month . '-' . $date->day;
-        return $dateString . ' ' . $userFirstName . ' ' . $userLastName . '' . $receiptNum;
+    private function saveDocuments($documents) {
+        return $this->Documents->getConnection()->transactional(function($connection) use ($documents) {
+            $success = true;
+            foreach ($documents as $document) 
+                $success = $success && $this->Documents->save($document);
+            return $success;
+        });
+    }
+
+    private function createReimbursement($data, $reimbursement, $receipts) {
+        $this->updateOtherRiderData($data);
+        $reimbursement = $this->Reimbursements->patchEntity($reimbursement, $data, ['associated' => 'OtherRiders']);
+        $reimbursement->receipts = $receipts;
+        return $this->Reimbursements->save($reimbursement, ['associated' => ['OtherRiders', 'Receipts']]);
     }
 }
