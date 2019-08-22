@@ -1,11 +1,6 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Reimbursement $reimbursement
- */
-?>
-<?php
     echo $this->Html->css(['reimbursements/style', 'form']);
+    echo $this->Html->script(['reimbursements/add']);
 ?>
 <div class="reimbursements form content">
     <?= $this->Html->link($this->Html->div('arrow-head') . '</div>', 
@@ -14,7 +9,7 @@
     ?> <!-- FIXME styling -->
     <h3>New Reimbursement</h3>
     <?php
-        echo $this->Form->create($reimbursement);
+        echo $this->Form->create($reimbursement, ['type' => 'file']);
         echo $this->Form->control('date_string', ['label' => 'Date']);
         echo $this->Form->control('volunteer_site_id', ['type' => 'radio', 'options' => $volunteerSites]);
         echo $this->Form->control('other_riders.user_ids', [
@@ -24,13 +19,38 @@
             'label' => 'Other Riders',
         ]);
     ?>
-    <?php 
-        echo $this->Form->create($documents[0], ['type' => 'file']);
-        echo $this->Form->control('document.filestuff', ['type' => 'file', 'label' => 'Receipt ' . (0 + 1)]); //FIXME make $k??
-    ?>
+    <?= $this->Form->create(null) ?>
+    <div>
+        <h4>Number of Receipts</h4>
+        <?php 
+            $values = [];
+            for ($k = 1; $k <= count($documents); $k++)
+                $values[$k] = $k;
+            echo $this->Form->radio('numreceipts', $values, [
+                'value' => 1,
+            ]);
+        ?>
+    </div>
     <?php
-        echo $this->Form->create($receipts[0]);
-        echo $this->Form->control('receipt.amount');
+        for ($k = 0; $k < count($documents); $k++) {
+            $num = $k + 1;
+            echo $this->Html->div('document-receipt', null, ['id' => 'document-receipt-' . $num]);
+                echo $this->Form->create($documents[$k]);
+                echo $this->Form->control('documents.' . $k . '.filestuff', [
+                    'type' => 'file', 
+                    'label' => 'Receipt ' . $num,
+                    'class' => 'document-input',
+                    'id' => 'document-input-' . $num, //FIXME remove??
+                    'required' => false,
+                ]);
+                echo $this->Form->create($receipts[$k]);
+                echo $this->Form->control('receipts.' . $k . '.amount', [
+                    'class' => 'receipt-input', 
+                    'id' => 'receipt-input-' . $num, //FIXME remove??
+                    'required' => false,
+                ]);
+            echo "</div>";
+        }
     ?>
     <?= $this->Form->button(__('Submit')) ?>
     <?= $this->Form->end() ?>

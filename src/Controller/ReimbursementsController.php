@@ -169,7 +169,12 @@ class ReimbursementsController extends AppController
         $this->hardDelete($this->Reimbursements, $id, $this->redirect(['action' => 'index']), 'reimbursement');
     }
 
-    public function test() {
+    /**
+    * Add method
+    *
+    * @return \Cake\Http\Response|null Redirects to index.
+    */
+    public function add() {
         $maxNumReceipts = 4;
         $reimbursement = $this->Reimbursements->newEntity();
         $documents = $this->newEntities($this->Documents, $maxNumReceipts);
