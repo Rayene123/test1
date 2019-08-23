@@ -10,7 +10,7 @@
 div.main-content {
     position: relative;
     width: 100%;
-    min-height: calc(100% - 3.6rem); /* using .nav-height in nav.css*/
+    min-height: calc(100% - 3.6rem); /* using .nav-height in nav.css*/ /*FIXME do with js, needs to be screen height? */
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -36,6 +36,14 @@ div.main-content h4 {
 
 div.main-content p {
     font-size: 1rem;
+}
+
+div.main-content a {
+    color: white;
+}
+
+div.main-content a:hover {
+    text-decoration: none;
 }
 
 .white {
