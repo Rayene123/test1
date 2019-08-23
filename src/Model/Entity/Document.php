@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * Document Entity
@@ -20,13 +21,7 @@ use Cake\ORM\Entity;
 class Document extends Entity
 {
     private $Folders; //FIXME make static??
-    protected $folderName;
-
-    public function initialize() {
-        parent::initialize();
-        $this->Folders = TableRegistry::get('Folders');
-        $this->folderName = null;
-    }
+    private $folderName;
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -76,7 +71,7 @@ class Document extends Entity
         $prop = $this->_properties;
         $this->folderName = WWW_ROOT; //FIXME??
         if (isset($prop['folder_id'])) {
-            $folder = $folder . $this->Folders
+            $folder = TableRegistry::get('Folders') //FIXME make Folders Table static??
                 ->find()
                 ->where(['id' => $prop['folder_id']])
                 ->first();
