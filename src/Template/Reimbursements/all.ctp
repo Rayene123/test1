@@ -5,11 +5,24 @@
  */
 ?>
 <?= $this->Html->css(['reimbursements/all']); ?>
+<?php 
+    function conditionalImage($htmlHelper, string $filename, $condition) {
+        if ($condition) {
+            return $htmlHelper->div('table-img-wrapper') . $htmlHelper->image('tutoring-img1.jpg') . "</div>"; //FIXME approval image, and center
+        }
+        return "";
+    }
+
+    function getSubmittedDate($reimbursement) {
+        $submitted = $reimbursement->submitted;
+        return is_null($submitted) ? '' : $submitted->i18nFormat("MMMM d");
+    }
+?>
 <div class="reimbursements content">
     <h2 class='title-float'><?= __('Club Reimbursements') ?></h2>
     <div class='stats'>
-        <h4 id='stat1'><?= __('Club Total Requested: $') . $financeStats['sum_approved']?></h4>
-        <h4><?= __('Club Total Approved: $') . $financeStats['sum']?></h4>
+        <h4><?= __('Club Total Requested: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) {return $result + $reimb->total;}, 0) ?></h4>
+        <h4><?= __('Club Total Approved: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) {return $result + $reimb->approved_total;}, 0) ?></h4> <!-- FIXME duplication with index.ctp-->
     </div>
     <div class='filter'>
     <?php
@@ -39,6 +52,7 @@
                 <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                 <th scope="col"><?= __('Total') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('submitted') ?></th>
+                <th class='capital' scope="col"><?= __('Approved') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('deleted') ?></th>
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
@@ -52,11 +66,12 @@
                 <td><?= h($reimbursement->date) ?></td>
                 <td><?= h($reimbursement->created) ?></td>
                 <td><?= h($reimbursement->total) ?></td>
-                <td><?= h($reimbursement->submitted) ?></td>
+                <td><?= getSubmittedDate($reimbursement) ?></td>
+                <td><?= conditionalImage($this->Html, 'tutoring-img1.jpg', $reimbursement->approved);//FIXME real image, and center image ?></td>
                 <td><?= h($reimbursement->deleted) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $reimbursement->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $reimbursement->id]) ?>
+                    <!--  FIXME uncomment when edit works < $this->Html->link(__('Edit'), ['action' => 'edit', $reimbursement->id]) ?> -->
                     <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $reimbursement->id], ['confirm' => __('Are you sure you want to delete # {0}?', $reimbursement->id)]) ?>
                 </td>
             </tr>

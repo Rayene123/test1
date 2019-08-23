@@ -3,6 +3,8 @@ namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
 use Cake\I18n\Date;
+use Cake\ORM\TableRegistry;
+use \Cake\ORM\Query;
 
 /**
  * Reimbursement Entity
@@ -21,6 +23,10 @@ use Cake\I18n\Date;
  */
 class Reimbursement extends Entity
 {
+    private $receipts;
+
+    //protected $_virtual = ['total', 'approved_total', 'approved'];
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
@@ -46,6 +52,7 @@ class Reimbursement extends Entity
         'volunteer_site' => false
     ];
 
+    //FIXME remove?? or make trait that goes along with SimpleDateBehavior??
     protected function _getDateString() {
         if (isset($this->_properties['date_string'])) {
             return $this->_properties['date_string'];
@@ -55,5 +62,48 @@ class Reimbursement extends Entity
         }
         $date = new Date($this->date);
         return $date->i18nFormat("M/d");
+    }
+
+    //FIXME make ternary (like no, partially, yes)
+    protected function _getApproved() {
+        $approved = true;
+        if ($this->getReceipts()) {
+            foreach ($this->receipts as $receipt)
+                $approved = $approved & $receipt->approved;
+        }
+        return $approved;
+    }
+
+    protected function _getTotal() {
+        $total = 0;
+        if ($this->getReceipts()) {
+            foreach ($this->receipts as $receipt)
+                $total += $receipt->amount;
+        }
+        return $total;
+    }
+
+    protected function _getApprovedTotal() {
+        $total = 0;
+        foreach ($this->getReceipts() as $receipt) {
+            if ($receipt->approved)
+                $total += $receipt->amount;
+        }
+        return $total;
+    }
+
+    private function getReceipts() {
+        if (!is_null($this->receipts))
+            return $this->receipts;
+
+        $this->receipts = [];
+        $prop = $this->_properties;
+        if (isset($prop['id'])) {
+            $this->receipts = TableRegistry::get('Receipts') //FIXME make receipts table static??
+                ->find()
+                ->where(['reimbursement_id' => $prop['id']])
+                ->toArray();
+        }
+        return $this->receipts;
     }
 }

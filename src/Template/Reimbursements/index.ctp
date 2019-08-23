@@ -25,8 +25,8 @@
 <div class="reimbursements index content">
     <h2 class='inline-block'><?= __('Reimbursements') ?></h2>
     <?= $this->Html->link('', '/reimbursements/add', ['class' => ['float-right', 'plus-button']]) ?>
-    <h4><?= __('Total Requested: $') . $financeStats['sum']?></h4>
-    <h4><?= __('Total Approved: $') . $financeStats['sum_approved']?></h4>
+    <h4><?= __('Total Requested: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) { return $result + $reimb->total; }, 0) ?></h4>
+    <h4><?= __('Total Approved: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) {return $result + $reimb->approved_total;}, 0)?></h4>
     <div class='table-area'>
         <table class='sleek' cellpadding="0" cellspacing="0">
             <thead>
@@ -48,20 +48,10 @@
                     <td><?= h($reimbursement->total) ?></td>
                     <td><?= h($reimbursement->created) ?></td>
                     <td><?= getSubmittedDate($reimbursement); ?></td>
-                    <td>
-                        <?php 
-                            if (isset($reimbursement['receipts']) && count($reimbursement['receipts']) > 0) {
-                                $isApproved = true;
-                                foreach ($reimbursement->receipts as $receipt) {
-                                    $isApproved = isset($receipt['approved']) && $receipt['approved'] === true;
-                                }
-                                echo conditionalImage($this->Html, 'tutoring-img1.jpg', $isApproved);//FIXME real image, and center image
-                            }
-                        ?>
-                    </td>
+                    <td><?= conditionalImage($this->Html, 'tutoring-img1.jpg', $reimbursement->approved);//FIXME real image, and center image ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $reimbursement->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $reimbursement->id]) ?>
+                        <!--  FIXME uncomment when edit works < $this->Html->link(__('Edit'), ['action' => 'edit', $reimbursement->id]) ?> -->
                         <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $reimbursement->id], ['confirm' => __('Are you sure you want to delete # {0}?', $reimbursement->id)]) ?>
                     </td>
                 </tr>

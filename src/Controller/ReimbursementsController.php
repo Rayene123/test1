@@ -32,50 +32,17 @@ class ReimbursementsController extends AppController
      */
     public function index()
     {   
-        $query = $this->getReimbursementsWithTotals($this->Auth->user('id'));
+        $query = $this->getReimbursements($this->Auth->user('id'));
         $this->paginate = ['contain' => ['VolunteerSites']];
         $reimbursements = $this->paginate($query);
-        $financeStats = $this->getAllReimbursementsStats($reimbursements);
-        $this->set(compact('reimbursements', 'financeStats'));
+        $this->set(compact('reimbursements'));
     }
 
-    private function getAllReimbursementsStats($reimbursements) {
-        $sum = 0.0;
-        $sumApproved = 0.0;
-        foreach ($reimbursements as $reimbursement) {
-            $reimbursement = $reimbursement->toArray();
-            $sum += $reimbursement['total'];
-            $sumApproved += $reimbursement['approved_total'];
-        }
-        return ['sum'=>$sum,'sum_approved'=>$sumApproved];
-    }
-
-    private function getReimbursementsWithTotals($userID)
-    {
+    private function getReimbursements($userID) {
         $baseQuery = $this->Reimbursements->find();
-        if (!is_null($userID)) {
+        if (!is_null($userID))
             $baseQuery = $baseQuery->where(['reimbursements.user_id' => $userID]);
-        }
-        return $baseQuery
-            ->contain(['Users', 'VolunteerSites', 'Receipts'])
-            ->formatResults(function (\Cake\Collection\CollectionInterface $reimbursements) {
-                return $reimbursements->map(function ($reimbursement) {
-                    $total = 0.0;
-                    $approved_total = 0.0;
-                    if ($reimbursement->has('receipts')) {
-                        $total = 0.0;
-                        foreach ($reimbursement->receipts as $receipt) {
-                            $total += $receipt->amount;
-                            if ($receipt['approved'] === true) {
-                                $approved_total += $receipt->amount;
-                            }
-                        }
-                    }
-                    $reimbursement['total'] = $total;
-                    $reimbursement['approved_total'] = $approved_total;
-                    return $reimbursement;
-                });
-            });
+        return $baseQuery->contain(['Users', 'VolunteerSites', 'Receipts']);
     }
 
     /**
@@ -83,8 +50,7 @@ class ReimbursementsController extends AppController
      *
      * @return \Cake\Http\Response|null
      */
-    public function all()
-    {   
+    public function all() {   
         $this->request->allowMethod(['post', 'get']);
         $userID = null;
         if ($this->request->is('post')) {
@@ -93,15 +59,15 @@ class ReimbursementsController extends AppController
                 $userID = $requestedID;
             }
         }
-        $query = $this->getReimbursementsWithTotals($userID);
+        $query = $this->getReimbursements($userID);
         $this->paginate = [
             'contain' => ['Users', 'VolunteerSites']
         ]; //FIXME make contain included in method above?
         $reimbursements = $this->paginate($query);
-        $financeStats = $this->getAllReimbursementsStats($reimbursements);
-        $allUsers = $this->Users->find('list')
+        $allUsers = $this->Users
+            ->find('list')
             ->where(['users.id !=' => 1]);
-        $this->set(compact('reimbursements', 'financeStats', 'allUsers'));
+        $this->set(compact('reimbursements', 'allUsers'));
     }
 
     /**
