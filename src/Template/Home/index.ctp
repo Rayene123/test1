@@ -4,7 +4,7 @@
  */
 ?>
 <?php 
-    echo $this->Html->css(['home/style']);
+    echo $this->Html->css(['blue-background', 'home/style']);
     echo $this->Html->script(['home/resize-events']);
 
     function getEventDate($event) {
@@ -19,53 +19,55 @@
         return "<img class='" . $classes . "' src='" . $filename . "' alt '" . $alt . "'>";
     }
 ?>
-<div class="huge-pic-display-wrapper">
+<div class='gray-background'>
+<!-- <div class="huge-pic-display-wrapper">
     <div class="huge-pic-display center-text">
         <img class="huge-pic" src="img/tutoring-img1.jpg"> 
-        <!-- FIXME dynamic image here, also need to be able to animate scrolling through images, also add vertical shadow when hovering over button region (region should extend 100% in vertical direction) -->
+        <!- FIXME dynamic image here, also need to be able to animate scrolling through images, also add vertical shadow when hovering over button region (region should extend 100% in vertical direction) ->
         <div class="huge-pic-scroll-button-wrapper left transparent">
-            <a href="https://www.google.com"><img src="img/right-icon.png"></a> <!-- FIXME remove google link -->
+            <a href="https://www.google.com"><img src="img/right-icon.png"></a> <!- FIXME remove google link ->
         </div>
         <div class="huge-pic-scroll-button-wrapper right transparent">
             <a href="https://www.google.com"><img src="img/right-icon.png"></a>
         </div>
         <div class="huge-pic-description-wrapper">
-            <p class="huge-pic-description"> <!-- FIXME dynamic description here -->
+            <p class="huge-pic-description"> <!- FIXME dynamic description here ->
                 Jacob teaching Sally to play Yellow by Coldplay. 
                 Jacob teaching Sally to play Yellow by Coldplay. 
                 Jacob teaching Sally to play Yellow by Coldplay.
             </p>
         </div>
     </div>
-</div>
-<div class="blue-background center-text">
-    <h2>About Us</h2>
-    <p class="padding-before-sites">Lorem ipsum dolore adipiscing. The quick brown fox jumps lazily over the rocks. Yessir yeehaw!</p>
-</div>
-<div class="sites-shift-up transparent">
-    <?php 
-        $num_sites = count($sites);
-        $classes = '';
-        for ($k=0; $k<$num_sites; $k++) {
-            $site = $sites[$k];
-            $img = $this->Url->image('tutoring-img1.jpg'); //FIXME actual image
-            $classes = "site-card transparent col-xs-10 col-xs-offset-1 col-md-offset-0 col-md-6";
-            if ($k === $num_sites - 1 && $num_sites % 2 === 1) {
-                $classes .= " col-centered";
+</div> -->
+    <div class="blue-background center-text">
+        <h2>About Us</h2>
+        <p class="padding-before-sites">We teach kids in K-12 at multiple after school programs across Durham. More information about the awesome non-profit programs we work with is below.</p>
+    </div>
+    <div class="sites-shift-up transparent">
+        <?php 
+            $num_sites = count($sites);
+            $classes = '';
+            for ($k=0; $k<$num_sites; $k++) {
+                $site = $sites[$k];
+                $img = $this->Url->image('tutoring-img1.jpg'); //FIXME actual image
+                $classes = "site-card transparent col-xs-10 col-xs-offset-1 col-md-offset-0 col-md-6";
+                if ($k === $num_sites - 1 && $num_sites % 2 === 1) {
+                    $classes .= " col-centered";
+                }
+                echo $this->Html->div($classes);
+                    echo $this->Html->div('site-photo-wrapper centered-horizontal centered-vertical-wrapper');
+                        echo makeImg('site-photo centered-horizontal centered-vertical', $img, 'Site Image'); //FIXME add real alt 
+                    echo "</div>";
+                    echo $this->Html->div('center-text transparent');
+                        echo "<h2>" . $site->name . "</h2>";
+                        echo "<p>" . $site->description . "</p>";
+                    echo "</div>";
+                echo "</div>";
             }
-            echo $this->Html->div($classes);
-                echo $this->Html->div('site-photo-wrapper centered-horizontal centered-vertical-wrapper');
-                    echo makeImg('site-photo centered-horizontal centered-vertical', $img, 'Site Image'); //FIXME add real alt 
-                echo "</div>";
-                echo $this->Html->div('center-text transparent');
-                    echo "<h2>" . $site->name . "</h2>";
-                    echo "<p>" . $site->description . "</p>";
-                echo "</div>";
-            echo "</div>";
-        }
-    ?>
+        ?>
+    </div>
+    <div class="wax-seal transparent"><img class="centered-horizontal" src="img/dmt-logo.jpg" alt="DMT logo"></div>
 </div>
-<div class="wax-seal transparent"><img class="centered-horizontal" src="img/dmt-logo.jpg" alt="DMT logo"></div>
 <div class="events blue-background">
     <h2>Events</h2>
     <div id='events-content' class="transparent timeline-zone">
@@ -150,7 +152,4 @@
             -->
         </div>
     </div>
-</div>
-<div class="contact">
-    Contact?
 </div>
