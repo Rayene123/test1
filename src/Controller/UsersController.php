@@ -17,37 +17,46 @@ class UsersController extends AppController
         $this->Auth->allow(['login', 'logout', 'new', 'index']);
     }
 
-    public function index()
-    {
-        $user = $this->Auth->user();
-        if (!is_null($user))
-            $user = $this->Users->get($user['id'], ['contain' => ['Privileges']]);
+    //personal account page
+    public function index() {
+        $user = $this->getUser();
         $this->set(compact('user')); 
     }
 
-    public function login()
-    {
-        if ($this->Auth->user())
+    private function getUser() {
+        $user = $this->Auth->user();
+        if ($user)
+            return $this->Users->get($user['id'], ['contain' => ['Privileges']]);
+        return $user;
+    }
+
+    public function login() {
+        if ($this->Auth->user()) {
+            $this->Flash->info("You're already logged in");
             return $this->redirect($this->referer());
+        }
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
+            if ($user && $user->inactive || !$user->approved)
+                $this->Flash->error('This account is inactive or unapproved.');
             if ($user) {
                 $this->Auth->setUser($user);
+                $this->Flash->success("Successfully logged in");
                 return $this->redirect($this->Auth->redirectUrl());
             }
             $this->Flash->error('Your username or password is incorrect.');
         }
     }
 
-    public function logout()
-    {   
+    public function logout() {   
         if ($this->Auth->user())
             $this->Flash->success('You are now logged out.');
+        else 
+            $this->Flash->info("You aren't logged in. Can't log out");
         return $this->redirect($this->Auth->logout());
     }
 
-    public function new()
-    {
+    public function new() {
         $user = $this->Users->newEntity();
         $location = $this->Users->Locations->newEntity();
         if ($this->request->is('post')) {
@@ -72,26 +81,8 @@ class UsersController extends AppController
         $this->set(compact('user', 'location'));
     }
 
-    public function members()
-    {
-        //FIXME do this
-        $this->paginate = [
-            'contain' => ['Locations']
-        ];
-        $users = $this->paginate($this->Users);
-
-        $this->set(compact('users'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
+    //personal
+    public function view($id = null) {
         //FIXME do this, update privileges
         $user = $this->Users->get($id, [
             'contain' => ['Locations']
@@ -100,15 +91,8 @@ class UsersController extends AppController
         $this->set('user', $user);
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
+    //personal
+    public function edit($id = null) {
         //FIXME do this, remove view
         $user = $this->Users->get($id, [
             'contain' => []
@@ -126,28 +110,54 @@ class UsersController extends AppController
         $this->set(compact('user', 'locations'));
     }
 
-    /**
-     * Delete method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        
-        $errorMessage = __('The user could not be deleted. Please, try again.');
-        if ($id != 1) {
-            $user = $this->Users->get($id);
-            if ($this->Users->delete($user))
-                $this->Flash->success(__('The user has been deleted.'));
-            else
-                $this->Flash->error($errorMessage );
+     //FIXME test
+    public function makeInactive($id = null) {
+        $this->request->allowMethod(['post']);
+        //FIXME make sure current user is an active, approved member editor 
+        //FIXME make sure isn't affecting themself??
+
+        $user = $this->Users->get($id, ['contain' => 'Privileges']);
+        if ($user->privilege->member_editor) {
+            $numMemberEditors = $memberEditors = $this->Users->find()
+                ->where(['inactive' => false])
+                ->where(['approved' => true])
+                ->innerJoinWith('Privileges', function ($query) {
+                    return $query->where(['Privileges.member_editor' => true]);
+                })
+                ->count();
+            $this->log($numMemberEditors, 'debug'); //FIXME remove
+            if ($numMemberEditors <= 1)
+                $this->Flash->error("Can't make the only member editor inactive");
+            else {
+                $user->inactive = true;
+                $this->Users->save($user); //FIXME make sure it works
+            }
         }
-        else
-            $this->Flash->error($errorMessage );
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    //FIXME todo
+    public function approve() {
+        
+    }
+
+    public function members() {
+        $user = $this->getUser();
+        $allowed = $user && !$user->inactive && $user->approved && $user->privilege->member_editor;
+        if (!$allowed) {
+            $this->Flash->warning("You're not allowed to view this page.");
+            return $this->redirect($this->referer());
+        }
+        $users = $this->paginate($this->Users);
+        $this->set(compact('users'));
+    }
+
+    public function editMember() {
+        //FIXME todo
+    }
+
+    public function viewMember() {
+        //FIXME todo?
     }
 }
