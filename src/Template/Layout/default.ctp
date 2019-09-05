@@ -48,7 +48,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 <body>
     <nav class="nav-height white">
 		<div id="nav-logo-wrapper" class="transparent">
-			<a href=""><img id="nav-logo" src=<?= $this->Url->image('dmt-logo.jpg') ?> alt="Logo"></a>
+			<a href=<?= $this->Url->build(['controller' => 'Home', 'action' => 'index']) ?>><img id="nav-logo" src=<?= $this->Url->image('dmt-logo.jpg') ?> alt="Logo"></a>
         </div>
         <div class='nav-links'>
             <div class="nav-link-wrapper transparent col-md-3">
