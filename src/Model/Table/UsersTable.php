@@ -60,32 +60,33 @@ class UsersTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->scalar('username')
-            ->maxLength('username', 25)
-            ->requirePresence('username', 'create')
-            ->notEmptyString('username');
-
-        $validator
             ->scalar('password')
             ->maxLength('password', 40)
             ->requirePresence('password', 'create')
             ->notEmptyString('password');
 
-        $validator = $this->getEmailValidator();
+        $validator
+            ->numeric('unique_id')
+            ->maxLength('unique_id', 7)
+            ->minLength('unique_id', 7);
+        
+        $validator = $this->getUsernameValidator();
 
             //FIXME unique id numeric and exactly x digits
 
         return $validator;
     }
 
-    private function getEmailValidator(Validator $validator) {
+    private function getUsernameValidator(Validator $validator) {
+        $validator = $validator
+            ->maxLength('username', 64)
+            ->requirePresence('username', 'create')
+            ->notEmptyString('username');
+
         $isAdmin = $this->find('count') == 0; //FIXME delete email column and make username be an email
-        if (!$isAdmin) {
-            $validator = $validator
-                ->email('email')
-                ->requirePresence('email', 'create')
-                ->notEmptyString('email');
-        }
+        if (!$isAdmin)
+            $validator = $validator->email('username');
+               
         return $validator;
     }
 
