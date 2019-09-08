@@ -71,13 +71,21 @@ class UsersTable extends Table
             ->requirePresence('password', 'create')
             ->notEmptyString('password');
 
-        $validator
-            ->email('email')
-            ->requirePresence('email', 'create')
-            ->notEmptyString('email');
+        $validator = $this->getEmailValidator();
 
             //FIXME unique id numeric and exactly x digits
 
+        return $validator;
+    }
+
+    private function getEmailValidator(Validator $validator) {
+        $isAdmin = $this->find('count') == 0; //FIXME delete email column and make username be an email
+        if (!$isAdmin) {
+            $validator = $validator
+                ->email('email')
+                ->requirePresence('email', 'create')
+                ->notEmptyString('email');
+        }
         return $validator;
     }
 
