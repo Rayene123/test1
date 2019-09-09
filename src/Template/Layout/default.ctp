@@ -32,14 +32,15 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
             'mystyle.css', 
             'nav.css',
             'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css',
-            "https://fonts.googleapis.com/css?family=Encode+Sans:400,700&display=swap"
+            "https://fonts.googleapis.com/css?family=Encode+Sans:400,700&display=swap",
         ]) 
     ?> 
     <?= 
         $this->Html->script([
             'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js',
             'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js',
-            'nav'
+            'nav',
+            'resize',
         ])
     ?>
     <?= $this->fetch('meta') ?>
@@ -52,37 +53,37 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 			<a href=<?= $this->Url->build(['controller' => 'Home', 'action' => 'index']) ?>><img id="nav-logo" src=<?= $this->Url->image('dmt-logo.jpg') ?> alt="Logo"></a>
         </div>
         <div class='nav-links'>
-            <!-- <div class="nav-link-wrapper transparent col-md-3">
+            <!-- <div class="nav-link-wrapper transparent col-xs-3">
                 <= $this->Html->link('Team',
                         ['controller' => '', 'action' => ''],  /* FIXME right location */
                         ['class' => 'nav-link']);
                 ?>
             </div> -->
-            <!-- <div class="nav-link-wrapper transparent col-md-3">
+            <!-- <div class="nav-link-wrapper transparent col-xs-3">
                 <= $this->Html->link('Photos',
                         ['controller' => '', 'action' => ''],  /* FIXME right location */
                         ['class' => 'nav-link']);
                 ?>
             </div> -->
-            <!-- <div class="nav-link-wrapper transparent col-md-3">
+            <!-- <div class="nav-link-wrapper transparent col-xs-3">
                 <= $this->Html->link('Blogs',
                         ['controller' => '', 'action' => ''],  /* FIXME right location */
                         ['class' => 'nav-link']);
                 ?>
             </div> -->
-            <div class="nav-link-wrapper transparent col-md-4">
+            <div class="nav-link-wrapper transparent col-xs-4">
                 <?= $this->Html->link('Home',
                         ['controller' => 'Home', 'action' => 'index'],
                         ['class' => 'nav-link']);
                 ?>
             </div>
-            <div class="nav-link-wrapper transparent col-md-4">
+            <div class="nav-link-wrapper transparent col-xs-4">
                 <?= $this->Html->link('Reimbursements',
                         ['controller' => 'Reimbursements', 'action' => 'index'],
                         ['class' => 'nav-link']);
                 ?>
             </div>
-            <div class="nav-link-wrapper transparent col-md-4">
+            <div class="nav-link-wrapper transparent col-xs-4">
                 <?= $this->Html->link('Account',
                         ['controller' => 'Users', 'action' => 'index'],
                         ['class' => 'nav-link']);

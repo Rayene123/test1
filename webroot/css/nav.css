@@ -2,7 +2,7 @@ nav {
     background-color: white;
     color: black;
     width: 100%;
-    font-size: 30px;
+    font-size: 1.05rem;
     position: fixed;
     z-index: 10;
     overflow: hidden;
