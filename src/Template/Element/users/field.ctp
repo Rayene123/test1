@@ -9,9 +9,6 @@
         $this->Form->control($name, [
             'type' => $type,
             'label' => false,
-            'templates' => [
-                'inputContainer' => '{{content}}'
-            ] 
         ]);
     ?>
     </div>
