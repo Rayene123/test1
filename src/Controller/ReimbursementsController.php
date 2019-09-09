@@ -213,6 +213,7 @@ class ReimbursementsController extends AppController
         $this->updateOtherRiderData($data);
         $reimbursement = $this->Reimbursements->patchEntity($reimbursement, $data, ['associated' => 'OtherRiders']);
         $reimbursement->receipts = $receipts;
+        $reimbursement->user_id = $this->Auth->user('id');
         return $this->Reimbursements->save($reimbursement, ['associated' => ['OtherRiders', 'Receipts']]);
     }
 

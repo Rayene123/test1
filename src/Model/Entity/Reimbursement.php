@@ -37,7 +37,7 @@ class Reimbursement extends Entity
      * @var array
      */
     protected $_accessible = [
-        'user_id' => true,
+        'user_id' => false,
         'volunteer_site_id' => true,
         'date' => true,
         'created' => true,
