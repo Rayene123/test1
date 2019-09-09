@@ -52,6 +52,6 @@
             echo "</div>";
         }
     ?>
-    <?= $this->Form->button(__('Submit')) ?>
+    <?=  $this->Form->button(__('Submit'), ['type' => 'submit', 'class' => 'submit', 'formnovalidate' => true]); ?>
     <?= $this->Form->end() ?>
 </div>
