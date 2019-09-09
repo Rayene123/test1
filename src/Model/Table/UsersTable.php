@@ -65,14 +65,21 @@ class UsersTable extends Table
             ->requirePresence('password', 'create')
             ->notEmptyString('password');
 
+        $uniqueIdMsg = 'Must be 7 digits long';
         $validator
-            ->numeric('unique_id')
-            ->maxLength('unique_id', 7)
-            ->minLength('unique_id', 7);
-        
-        $validator = $this->getUsernameValidator();
+            ->numeric('unique_id', $uniqueIdMsg)
+            ->maxLength('unique_id', 7, $uniqueIdMsg)
+            ->minLength('unique_id', 7, $uniqueIdMsg);
 
-            //FIXME unique id numeric and exactly x digits
+        $validator
+            ->requirePresence('first_name', 'create')
+            ->notEmptyString('first_name');
+
+        $validator
+            ->requirePresence('last_name', 'create')
+            ->notEmptyString('last_name');
+        
+        $validator = $this->getUsernameValidator($validator);
 
         return $validator;
     }
@@ -83,7 +90,7 @@ class UsersTable extends Table
             ->requirePresence('username', 'create')
             ->notEmptyString('username');
 
-        $isAdmin = $this->find('count') == 0; //FIXME delete email column and make username be an email
+        $isAdmin = $this->find()->count() == 0;
         if (!$isAdmin)
             $validator = $validator->email('username');
                
