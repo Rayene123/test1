@@ -16,7 +16,7 @@ a.mybutton:hover {
 }
 
 a.mybutton p {
-    line-height: 1.5;
+    line-height: 1.5rem;
     display: inline-block;
     vertical-align: middle;
 }
