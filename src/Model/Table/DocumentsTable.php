@@ -75,10 +75,6 @@ class DocumentsTable extends Table
             ->allowEmptyString('id', null, 'create');
 
         $validator
-            ->boolean('is_private')
-            ->notEmptyString('is_private');
-
-        $validator
             ->dateTime('uploaded')
             ->notEmptyDateTime('uploaded');
 
@@ -234,7 +230,7 @@ class DocumentsTable extends Table
         $this->sessionDocuments[] = $document;
         return $document;
         //FIXME handle WWW_REIMBURSEMENTS
-        //FIXME handle folders, is_private...
+        //FIXME handle folders...
     }
     */
 }

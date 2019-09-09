@@ -11,7 +11,6 @@ use Cake\ORM\TableRegistry;
  * @property int $user_id
  * @property string $filename
  * @property string $extension
- * @property bool $is_private
  * @property \Cake\I18n\FrozenTime $uploaded
  * @property int|null $folder_id
  *
@@ -36,7 +35,6 @@ class Document extends Entity
         'user_id' => true,
         'filename' => true,
         'extension' => true,
-        'is_private' => true,
         'uploaded' => true,
         'folder_id' => true,
         'user' => true,

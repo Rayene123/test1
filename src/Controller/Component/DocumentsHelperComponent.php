@@ -77,7 +77,7 @@ class DocumentsHelperComponent extends Component
         $this->sessionDocuments[] = $document;
         return $document;
         //FIXME handle WWW_REIMBURSEMENTS
-        //FIXME handle folders, is_private...
+        //FIXME handle folders...
     }
 
     private function extensionErrorMessage($extensions) {

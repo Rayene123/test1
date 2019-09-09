@@ -10,12 +10,12 @@ use \Cake\Auth\DefaultPasswordHasher;
  * @property int $id
  * @property string $username
  * @property string $password
- * @property string $email
+ * @property string first_name
+ * @property string last_name
  * @property string $unique_id
  * @property int $location_id
  * @property \Cake\I18n\FrozenTime $created
  *
- * @property \App\Model\Entity\Unique $unique
  * @property \App\Model\Entity\Location $location
  */
 class User extends Entity
@@ -37,7 +37,6 @@ class User extends Entity
         'unique_id' => true,
         'location_id' => true,
         'created' => true,
-        'unique' => true,
         'location' => true
     ];
 
