@@ -44,3 +44,19 @@ nbproject/*
 .vscode
 # Sass preprocessor
 .sass-cache/
+
+# Stuff I'm adding # 
+###################
+.editorconfig
+.gitattributes
+.github/
+.htaccess
+.travis.yml
+bin/
+composer.json
+composer.lock
+config/
+index.php
+phpunit.xml.dist
+plugins/
+tests/
