@@ -32,19 +32,22 @@ class UsersController extends AppController
 
     public function login() {
         if ($this->Auth->user()) {
-            $this->Flash->info("You're already logged in");
+            $this->Flash->error("You're already logged in.");
             return $this->redirect($this->referer());
         }
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
-            if ($user && $user->inactive || !$user->approved)
-                $this->Flash->error('This account is inactive or unapproved.');
             if ($user) {
-                $this->Auth->setUser($user);
-                $this->Flash->success("Successfully logged in");
-                return $this->redirect($this->Auth->redirectUrl());
+                if ($user['inactive'] || !$user['approved'])
+                    $this->Flash->error('This account is inactive or unapproved.');
+                else {
+                    $this->Auth->setUser($user);
+                    $this->Flash->success("Successfully logged in");
+                    return $this->redirect($this->Auth->redirectUrl());
+                }
             }
-            $this->Flash->error('Your username or password is incorrect.');
+            else
+                $this->Flash->error('Your username or password is incorrect.');
         }
     }
 
@@ -52,7 +55,7 @@ class UsersController extends AppController
         if ($this->Auth->user())
             $this->Flash->success('You are now logged out.');
         else 
-            $this->Flash->info("You aren't logged in. Can't log out");
+            $this->Flash->error("You aren't logged in. Can't log out.");
         return $this->redirect($this->Auth->logout());
     }
 
@@ -63,7 +66,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             $location = $this->Users->Locations->patchEntity($location, $this->request->getData());
             $user->location = $location;
-           $success = $this->Users->getConnection()->transactional(function ($conn) use ($user) {
+            $success = $this->Users->getConnection()->transactional(function ($conn) use ($user) {
                 $userSaved = $this->Users->save($user, ['associated' => 'Locations']);
                 if ($userSaved !== false) {
                     $privileges = $this->Users->Privileges->newEntity();
