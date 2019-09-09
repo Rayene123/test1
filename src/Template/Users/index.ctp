@@ -15,8 +15,6 @@
         echo $this->element('users/buttongrid', [
             'title' => 'Hey, ' . $user['first_name'] . '!',
             'buttons' => [
-                ['name' => 'Edit Basic Info', 'controller' => 'Users', 'action' => 'edit'],
-                ['name' => 'Edit Extra Info', 'controller' => 'Users', 'action' => 'editExtra'],
                 ['name' => 'My Reimbursements', 'controller' => 'Reimbursements', 'action' => 'index'],
                 ['name' => 'My Blogs', 'controller' => 'Blogs', 'action' => 'index'], //FIXME user-specific index
                 ['name' => 'My Images', 'controller' => 'SiteImages', 'action' => 'index'], //FIXME user-specific index
@@ -56,6 +54,13 @@
             ]);
         }
 
-        
+        echo $this->element('users/buttongrid', [
+            'title' => 'Account',
+            'buttons' => [
+                ['name' => 'Edit Basic Info', 'controller' => 'Users', 'action' => 'edit'],
+                ['name' => 'Edit Extra Info', 'controller' => 'Users', 'action' => 'editExtra'],
+                ['name' => 'Logout', 'controller' => 'Users', 'action' => 'logout'],
+            ],
+        ]);
     }
 ?>
