@@ -11,7 +11,7 @@
     echo $this->Html->script(['users/form']);
 ?>
 <div class="users form">
-    <div class='user-form'>
+    <div class='myform user-form'>
         <h2>New Account</h2></h2>
         <?= $this->Form->create($user) ?>
         <div class='fields'>
@@ -24,12 +24,12 @@
                     'last_name', 
                     'unique_id'
                 ],
-                'specialTypes' => [
-                    'unique_id' => 'text'
-                ],
                 'specialNames' => [
                     'username' => 'email'
-                ]
+                ],
+                'fieldOptions' => [
+                    'unique_id' => ['type' => 'text'],
+                ],
             ])
         ?>
         </div>

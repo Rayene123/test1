@@ -9,7 +9,7 @@
 ?>
 <div class="users form">
 <?= $this->Flash->render('auth') ?>
-    <div class='user-form'>
+    <div class='myform user-form'>
         <?= $this->Form->create() ?>
         <div class='fields'>
         <?= 
