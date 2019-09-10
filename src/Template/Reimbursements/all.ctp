@@ -4,7 +4,10 @@
  * @var \App\Model\Entity\Reimbursement[]|\Cake\Collection\CollectionInterface $reimbursements
  */
 ?>
-<?= $this->Html->css(['reimbursements/all']); ?>
+<?php
+    echo $this->Html->css(['reimbursements/all', 'table']); 
+    echo $this->Html->script(['table', 'table-too-small']);
+?>
 <?php 
     function conditionalImage($htmlHelper, string $filename, $condition) {
         if ($condition) {
@@ -42,10 +45,9 @@
         echo $this->Form->end();
     ?>
     </div>
-    <table cellpadding="0" cellspacing="0">
+    <table class='sleek'>
         <thead>
             <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('user.last_name', 'Member') ?></th> <!-- FIXME sort by full name --> 
                 <th scope="col"><?= $this->Paginator->sort('volunteer_site.name', 'Site') ?></th>
                 <th scope="col"><?= $this->Paginator->sort('date') ?></th>
@@ -57,10 +59,9 @@
                 <th scope="col" class="actions"><?= __('Actions') ?></th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class='body-half-screen'>
             <?php foreach ($reimbursements as $reimbursement): ?>
-            <tr ondblclick=<?="location.href='" . $this->Url->build(["controller" => "Reimbursements","action" => "view", $reimbursement->id]) ."'"?>>
-                <td><?= $this->Number->format($reimbursement->id) ?></td>
+            <tr onclick='handleTableRowSelect(this)' ondblclick=<?="location.href='" . $this->Url->build(["controller" => "Reimbursements","action" => "view", $reimbursement->id]) ."'"?>>
                 <td><?= $reimbursement->has('user') ? $this->Html->link($reimbursement->user->full_name, ['controller' => 'Users', 'action' => 'view', $reimbursement->user->id]) : '' ?></td>
                 <td><?= $reimbursement->has('volunteer_site') ? $this->Html->link($reimbursement->volunteer_site->name, ['controller' => 'VolunteerSites', 'action' => 'view', $reimbursement->volunteer_site->id]) : '' ?></td>
                 <td><?= h($reimbursement->date) ?></td>
@@ -78,14 +79,6 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
-    </div>
+    <p id='too-small'>The browser window is too small. Please expand the window on a computer to continue.</p>
+    <h4><?= $this->Paginator->counter(['format' => __('Reimbursement Count: {{count}}')]) ?></h4>
 </div>
