@@ -5,8 +5,7 @@
  */
 ?>
 <?php 
-    echo $this->Html->css(['reimbursements/style']); 
-    echo $this->Html->css(['table']);
+    echo $this->Html->css(['reimbursements/style', 'table']);
     echo $this->Html->script(['table']);
 ?>
 <?php 
@@ -34,20 +33,20 @@
                     <th class='capital' scope="col"><?= $this->Paginator->sort('date') ?></th>
                     <th class='capital' scope="col"><?= $this->Paginator->sort('volunteer_site.name', 'Site') ?></th>
                     <th class='capital' scope="col"><?= __('Total') ?></th>
-                    <th class='capital' scope="col"><?= $this->Paginator->sort('created') ?></th>
-                    <th class='capital' scope="col"><?= $this->Paginator->sort('submitted') ?></th>
+                    <th class='capital disappearing' scope="col"><?= $this->Paginator->sort('created') ?></th>
+                    <th class='capital disappearing' scope="col"><?= $this->Paginator->sort('submitted') ?></th>
                     <th class='capital' scope="col"><?= __('Approved') ?></th>
                     <th class='capital' scope="col" class="actions"><?= __('Actions') ?></th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class='body-half-screen'>
                 <?php foreach ($reimbursements as $reimbursement): ?>
                 <tr onclick='handleTableRowSelect(this)' ondblclick=<?="location.href='" . $this->Url->build(["controller" => "Reimbursements","action" => "view", $reimbursement->id]) ."'"?>>
                     <td><?= h($reimbursement->date) ?></td>
                     <td><?= h($reimbursement->volunteer_site->name) ?></td>
                     <td><?= h($reimbursement->total) ?></td>
-                    <td><?= h($reimbursement->created) ?></td>
-                    <td><?= getSubmittedDate($reimbursement); ?></td>
+                    <td class='disappearing'><?= h($reimbursement->created) ?></td>
+                    <td class='disappearing'><?= getSubmittedDate($reimbursement); ?></td>
                     <td><?= conditionalImage($this->Html, 'tutoring-img1.jpg', $reimbursement->approved);//FIXME real image, and center image ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $reimbursement->id]) ?>

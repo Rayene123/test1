@@ -9,17 +9,11 @@ $(window).on('load', function() {
 });
 */
 
-function handleResize() {
+
+
+$(window).on('load resize', function() {
     const xs = 993;//768;
     const width = $(window).width();
     var textAlign = (width <= xs) ? 'center' : 'right';
     $('.field-name').css('text-align', textAlign);
-}
-
-$(window).on('load', function() {
-    handleResize();
-});
-
-$(window).on('resize', function() {
-    handleResize();
 });

@@ -1,4 +1,4 @@
-function resizeEvents() {
+$(window).on('load resize', function() {
     const xs = 993;//768;
     const centerText = 'center-text';
 
@@ -32,12 +32,4 @@ function resizeEvents() {
             children.each(function() { showChildren($(this));})
         }
     }
-}
-
-$(window).on('load', function() {
-    resizeEvents();
-});
-
-$(window).on('resize', function() {
-    resizeEvents();
 });
