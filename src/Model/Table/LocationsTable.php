@@ -76,8 +76,8 @@ class LocationsTable extends Table
 
         $validator
             ->scalar('po_box') //FIXME numeric string, maybe with dashes
-            ->maxLength('po_box', 10) //add custom validate if duke address, can't be opitonal
-            ->notEmptyString('po_box');
+            ->maxLength('po_box', 10)   //add custom validate if duke address, can't be opitonal
+            ->allowEmpty('po_box');
 
         return $validator;
     }
