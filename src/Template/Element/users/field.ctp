@@ -5,11 +5,9 @@
         </h3>
     </div>
     <div class='col-md-5'>
-    <?=
-        $this->Form->control($name, [
-            'type' => $type,
-            'label' => false,
-        ]);
+    <?php 
+        $options['label'] = false;
+        echo $this->Form->control($name, $options);
     ?>
     </div>
 </div>
