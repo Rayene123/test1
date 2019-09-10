@@ -21,6 +21,10 @@ div.filter {
     display: block;
 }
 
+div.filter select {
+    color: black;
+}
+
 .inline-block {
     display: inline-block;
 }
