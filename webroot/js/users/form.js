@@ -4,7 +4,6 @@ $(window).on('load', function() {
     const screenHeight = $(window).height();
     const navHeight = $('nav.nav-height').height();
     const padding = (screenHeight - navHeight) / 4.0;
-    console.log(padding);
     $('div.user-form .pad').css('padding-top', padding);
 });
 */
