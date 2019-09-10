@@ -7,7 +7,17 @@ function handleTableRowSelect(newRow) {
         $(newRow).addClass(selectedCSS);
 }
 
-var $th = $('table.slick').find('thead tr');
+var $th = $('table.sleek').find('thead tr');
 $('.tableFixHead').on('scroll', function() {
     $th.css('transform', 'translateY('+ this.scrollTop +'px)');
+});
+
+$(window).on('load resize', function() {
+    const xxs = 600;//768;
+    const width = $(window).width();
+    var disappearing = $("table.sleek .disappearing");
+    if (width <= xxs)
+        disappearing.hide();
+    else
+        disappearing.show();
 });
