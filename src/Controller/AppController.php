@@ -75,12 +75,9 @@ class AppController extends Controller
          */
         //$this->loadComponent('Security');
     }
-    
-
-    
 
     //@throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-    protected function hardDelete(Table $table, int $id, Response $redirection, string $itemName = 'item') {
+    protected function hardDelete(Table $table, int $id, Response $redirection, string $itemName) {
         $successMessage = __('The '.$itemName.' has been deleted.');
         $errorMessage = __('The '.$itemName.' could not be deleted. Please, try again.');
         $this->request->allowMethod(['post', 'delete']);
