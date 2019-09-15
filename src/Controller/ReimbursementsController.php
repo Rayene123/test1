@@ -86,7 +86,7 @@ class ReimbursementsController extends AppController
     }
 
     public function viewpdf($id = null) {
-        $trueFilename = WWW_ROOT . '2019-5-7 Test Gal1.png';
+        $trueFilename = WWW_ROOT . '2019-5-7 Test Gal1.png'; //FIXME
         $filename = WWW_ROOT . 'tmp-reimb.png';
         copy($trueFilename, $filename);
         $response = $this->response->withFile($filename);
@@ -199,6 +199,10 @@ class ReimbursementsController extends AppController
     }
 
     private function saveDocuments($documents) {
+        foreach ($documents as $doc) {
+            $doc->folder_id = 2; //FIXME must align with server
+            $doc->user_id = $this->Auth->user('id');
+        }
         return $this->Documents->getConnection()->transactional(function($connection) use ($documents) {
             $success = true;
             foreach ($documents as $document) 
