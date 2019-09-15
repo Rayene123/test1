@@ -20,12 +20,20 @@
         $submitted = $reimbursement->submitted;
         return is_null($submitted) ? '' : $submitted->i18nFormat("MMMM d");
     }
+
+    function total($reimbursements, $adder) {
+        if (is_null($reimbursements))
+            return 0;
+        else {
+            return array_reduce($reimbursements->toArray(), $adder, 0);
+        }
+    }
 ?>
 <div class="reimbursements index content">
     <h2 class='inline-block'><?= __('Reimbursements') ?></h2>
     <?= $this->Html->link('', ['controller' => 'Reimbursements', 'action' => 'add'], ['class' => ['plus-button']]) ?>
-    <h4><?= __('Total Requested: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) { return $result + $reimb->total; }, 0) ?></h4>
-    <h4><?= __('Total Approved: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) {return $result + $reimb->approved_total;}, 0)?></h4>
+    <h4><?= __('Total Requested: $') . total($reimbursements, function($result, $reimb) { return $result + $reimb->total; }) ?></h4>
+    <h4><?= __('Total Approved: $') . total($reimbursements, function($result, $reimb) {return $result + $reimb->approved_total;}, 0) ?></h4>
     <div class='table-area'>
         <table class='sleek' cellpadding="0" cellspacing="0">
             <thead>
