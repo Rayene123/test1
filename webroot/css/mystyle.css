@@ -109,7 +109,7 @@ div.col-centered{
 
 /**** FIXME get styles from old style.css for messages, error-message, error.message etc. ****/
 
-.form .error-message {
+.myform .error-message {
     display: block;
     padding: 0.375rem 0.5625rem 0.5625rem;
     margin-top: -1px;
@@ -117,8 +117,10 @@ div.col-centered{
     font-size: 0.75rem;
     font-weight: normal;
     font-style: italic;
-    color: rgba(0, 0, 0, 0.54);
+    color: rgba(255, 255, 255, 0.715);
 }
+
+.myform.u
 
 .error label,
 .error label.error {
