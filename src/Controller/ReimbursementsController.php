@@ -39,7 +39,7 @@ class ReimbursementsController extends AppController
     private function getReimbursements($userID) {
         $baseQuery = $this->Reimbursements->find();
         if (!is_null($userID))
-            $baseQuery = $baseQuery->where(['reimbursements.user_id' => $userID]);
+            $baseQuery = $baseQuery->where(['Reimbursements.user_id' => $userID]);
         return $baseQuery->contain(['Users', 'VolunteerSites', 'Receipts']);
     }
 
@@ -64,7 +64,7 @@ class ReimbursementsController extends AppController
         $reimbursements = $this->paginate($query);
         $allUsers = $this->Users
             ->find('list')
-            ->where(['users.id !=' => 1]);
+            ->where(['Users.id !=' => 1]);
         $this->set(compact('reimbursements', 'allUsers'));
     }
 
@@ -181,8 +181,8 @@ class ReimbursementsController extends AppController
         $volunteerSites = $this->Reimbursements->VolunteerSites->find('list');
         //FIXME add selected site using SiteUsers
         $extraRiders = $this->Reimbursements->Users->find('list')
-            ->where(['users.id !=' => 1])
-            ->where(['users.id !=' => $this->Auth->user('id')]);
+            ->where(['Users.id !=' => 1])
+            ->where(['Users.id !=' => $this->Auth->user('id')]);
         $this->set(compact('reimbursement', 'documents', 'receipts', 'volunteerSites', 'extraRiders'));
     }
 
