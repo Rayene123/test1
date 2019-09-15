@@ -18,7 +18,7 @@ class UserIdBehavior extends Behavior {
     ];
 
     private function userIdField() {
-        return $this->config()['user_id_field'];
+        return $this->getConfig()['user_id_field'];
     }
 
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {

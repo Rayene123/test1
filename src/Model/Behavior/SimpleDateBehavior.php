@@ -14,15 +14,15 @@ class SimpleDateBehavior extends Behavior {
     ];
 
     private function dateStringField() {
-        return $this->config()['date_string_field'];
+        return $this->getConfig()['date_string_field'];
     }
 
     private function dateField() {
-        return $this->config()['date_field'];
+        return $this->getConfig()['date_field'];
     }
 
     private function allowYear() {
-        return $this->config()['allow_year_in_string'];
+        return $this->getConfig()['allow_year_in_string'];
     }
 
     public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options) {
@@ -31,7 +31,7 @@ class SimpleDateBehavior extends Behavior {
             $data[$this->dateField()] = $this->buildDate($dateString);
     }
 
-    protected function buildDate(string $dateString) {
+    protected function buildDate($dateString) {
         // FIXME include year based on $this->allowYear();
         $hasSlash = substr_count($dateString, '/') === 1;
         $monthDay = $hasSlash ? explode('/', $dateString) : explode('-', $dateString);
@@ -51,7 +51,7 @@ class SimpleDateBehavior extends Behavior {
         return $date;
     }
 
-    public function isValidDateString(string $dateString) {
+    public function isValidDateString($dateString) {
         $len = strlen($dateString);
         if ($len < 3 || $len > 5)
             return false;
