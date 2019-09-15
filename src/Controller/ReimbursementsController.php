@@ -21,8 +21,6 @@ class ReimbursementsController extends AppController
         $this->loadModel('Receipts');
         $this->loadModel('OtherRiders');
         $this->loadModel('Documents');
-
-        $this->loadComponent('DocumentsHelper');
     }
 
     /**
