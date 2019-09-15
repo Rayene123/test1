@@ -28,7 +28,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= 
         $this->Html->css([
             'base.css', 
-            'style.css', //completed commmented out right now
+            //'style.css',
             'mystyle.css', 
             'nav.css',
             'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css',
