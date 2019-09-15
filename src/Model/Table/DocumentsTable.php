@@ -37,7 +37,6 @@ class DocumentsTable extends Table
         parent::initialize($config);
         $this->belongsTo('Users')->setJoinType('INNER');
         $this->belongsTo('Folders');
-        $this->addBehavior('UserId');
         $this->addBehavior('Timestamp', [
             'events' => [
                 'Model.beforeSave' => [

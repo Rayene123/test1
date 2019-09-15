@@ -51,7 +51,6 @@ class ReimbursementsTable extends Table
             ->setDependent(true)
             ->setCascadeCallbacks(true);
 
-        $this->addBehavior('UserId');
         $this->addBehavior('SimpleDate');
     }
 
