@@ -23,7 +23,7 @@
 ?>
 <div class="reimbursements index content">
     <h2 class='inline-block'><?= __('Reimbursements') ?></h2>
-    <?= $this->Html->link('', '/reimbursements/add', ['class' => ['plus-button']]) ?>
+    <?= $this->Html->link('', ['controller' => 'Reimbursements', 'action' => 'add'], ['class' => ['plus-button']]) ?>
     <h4><?= __('Total Requested: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) { return $result + $reimb->total; }, 0) ?></h4>
     <h4><?= __('Total Approved: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) {return $result + $reimb->approved_total;}, 0)?></h4>
     <div class='table-area'>

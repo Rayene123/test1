@@ -4,7 +4,7 @@
 ?>
 <div class="reimbursements form content">
     <?= $this->Html->link($this->Html->div('inline blue-oval') . $this->Html->div('arrow-head') . '</div>' .  h(' Cancel') . '</div>', 
-            '/reimbursements', 
+            ['controller' => 'Reimbursements', 'action' => 'index'], 
             ['class' => 'back-arrow', 'escape' => false])
     ?> <!-- FIXME styling -->
     <div class='center-text' style="padding-bottom: 1rem;"><h2>New Reimbursement</h2></div>
