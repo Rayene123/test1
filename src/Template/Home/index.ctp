@@ -11,7 +11,7 @@
         return $event->date->i18nFormat("MMMM d");
     }
 
-    function makeEmptyDiv(string $classes) {
+    function makeEmptyDiv($classes) {
         return "<div class='" . $classes . "'></div>";
     }
 

@@ -9,7 +9,7 @@
     echo $this->Html->script(['table']);
 ?>
 <?php 
-    function conditionalImage($htmlHelper, string $filename, $condition) {
+    function conditionalImage($htmlHelper, $filename, $condition) {
         if ($condition) {
             return $htmlHelper->div('table-img-wrapper') . $htmlHelper->image('tutoring-img1.jpg') . "</div>"; //FIXME approval image, and center
         }
