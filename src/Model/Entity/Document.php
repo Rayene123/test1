@@ -67,14 +67,14 @@ class Document extends Entity
             return $this->folderName;
         
         $prop = $this->_properties;
-        $this->folderName = WWW_RECEIPTS; //FIXME only if private
+        $this->folderName = WWW_IMG;
         if (isset($prop['folder_id'])) {
             $folder = TableRegistry::get('Folders') //FIXME make Folders Table static??
                 ->find()
                 ->where(['id' => $prop['folder_id']])
                 ->first();
             if (!\is_null($folder))
-                $this->folderName .= $folder;
+                $this->folderName = $folder->name . '/';
         }
         return $this->folderName;
     }
