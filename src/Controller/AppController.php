@@ -52,7 +52,7 @@ class AppController extends Controller
             'authenticate' => [
                 'Form' => [
                     'fields' => [
-                        'username' => 'username', //FIXME make email??
+                        'username' => 'username',
                         'password' => 'password'
                     ]
                 ]
@@ -62,10 +62,10 @@ class AppController extends Controller
                 'controller' => 'Users',
                 'action' => 'index'
             ],
-            //'unauthorizedRedirect' => $this->referer(),  FIXME uncomment??
+            'unauthorizedRedirect' => $this->referer(),  
         ]);
 
-        //FIXME use this in every controller where something doesn't need authentication
+        //use this in every controller where something doesn't need authentication
         //$this->Auth->allow(['actions']);
 
         //FIXME use this
