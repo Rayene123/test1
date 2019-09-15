@@ -42,7 +42,7 @@ class UsersController extends AppController
                     $this->Flash->error('This account is inactive or unapproved.');
                 else {
                     $this->Auth->setUser($user);
-                    $this->Flash->success("Successfully logged in");
+                    $this->Flash->success("You are now logged in");
                     return $this->redirect($this->Auth->redirectUrl());
                 }
             }
@@ -76,7 +76,7 @@ class UsersController extends AppController
                 return $userSaved !== false;
             });
             if ($success) {
-                $this->Flash->success(__("User account created."));
+                $this->Flash->success(__("Account created. We'll approve your account shortly."));
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
