@@ -15,7 +15,7 @@
         return "<div class='" . $classes . "'></div>";
     }
 
-    function makeImg(string $classes, string $filename, string $alt) {
+    function makeImg($classes, $filename, $alt) {
         return "<img class='" . $classes . "' src='" . $filename . "' alt '" . $alt . "'>";
     }
 ?>
@@ -49,7 +49,7 @@
             $classes = '';
             for ($k=0; $k<$num_sites; $k++) {
                 $site = $sites[$k];
-                $img = $this->Url->image('tutoring-img1.jpg'); //FIXME actual image
+                $img = $site->document->full_path;
                 $classes = "site-card transparent col-xs-10 col-xs-offset-1 col-md-offset-0 col-md-6";
                 if ($k === $num_sites - 1 && $num_sites % 2 === 1) {
                     $classes .= " col-centered";
