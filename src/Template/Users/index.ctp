@@ -7,7 +7,7 @@
             'title' => 'Please sign in',
             'buttons' => [
                 ['name' => 'Login', 'controller' => 'Users', 'action' => 'login'],
-                ['name' => 'Create Account', 'controller' => 'Users', 'action' => 'new'],
+                ['name' => 'Create Account', 'controller' => 'Users', 'action' => 'create'],
             ]
         ]);
     }

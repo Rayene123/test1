@@ -14,7 +14,7 @@ class UsersController extends AppController
 {
     public function initialize() {
         parent::initialize();
-        $this->Auth->allow(['login', 'logout', 'new', 'index']);
+        $this->Auth->allow(['login', 'logout', 'create', 'index']);
     }
 
     //personal account page
@@ -59,7 +59,7 @@ class UsersController extends AppController
         return $this->redirect($this->Auth->logout());
     }
 
-    public function new() {
+    public function create() {
         $user = $this->Users->newEntity();
         $location = $this->Users->Locations->newEntity();
         if ($this->request->is('post')) {
