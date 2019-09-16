@@ -24,10 +24,9 @@ class DocumentsController extends AppController
         if (!\is_null($id)) {
             $doc = $this->Documents->get($id);
             if (!\is_null($doc) && ($this->Auth->user('id') === $doc->user_id || $this->isTreasurer())) {
-                $this->response->withFile($doc->full_path);
+                $this->response = $this->response->withFile(WWW_ROOT . $doc->full_path);
                 //$this->response->header('Content-Disposition', 'inline');
                 $this->response = $this->response->withType($doc->extension);
-                $this->log($doc->full_path, 'debug'); //FIXME remove
                 return $this->response;
             }
         }
