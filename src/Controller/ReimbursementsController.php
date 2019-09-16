@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
+use Cake\I18n\FrozenTime;
 
 /**
  * Reimbursements Controller
@@ -41,6 +42,22 @@ class ReimbursementsController extends AppController
         if (!is_null($userID))
             $baseQuery = $baseQuery->where(['Reimbursements.user_id' => $userID]);
         return $baseQuery->contain(['Users', 'VolunteerSites', 'Receipts']);
+    }
+
+    public function toggleSubmission($id = null) {
+        if (!$this->isTreasurer()) {
+            $this->Flash->error("You don't have this permission.");
+        }
+        else {
+            $reimbursement = $this->Reimbursements->get($id);
+            $shouldSubmit = !$reimbursement->submitted;
+            $reimbursement->submitted = $shouldSubmit ? new FrozenTime() : null;
+            if ($this->Reimbursements->save($reimbursement)) 
+                $this->Flash->success("Reimbursement marked as submitted.");
+            else
+                $this->Flash->error("Reimbursement couldn't be marked as submitted.");
+        }
+        return $this->redirect($this->referer());
     }
 
     /**
@@ -85,8 +102,9 @@ class ReimbursementsController extends AppController
             $reimbursement = $this->Reimbursements->get($id, [
                 'contain' => ['VolunteerSites', 'Receipts', 'Receipts.Documents', 'Users', 'Users.Locations']
             ]);
-            if (!\is_null($reimbursement) && ($this->Auth->user('id') === $reimbursement->user_id || $this->isTreasurer())) {
-                $this->set(compact('reimbursement'));
+            if (!\is_null($reimbursement) && $this->ownerOrTreasurer($reimbursement)) {
+                $isTreasurer = $this->isTreasurer();
+                $this->set(compact('reimbursement', 'isTreasurer'));
             }
             else {
                 $this->Flash->error(__("You don't have permissions to view this reimbursement"));
@@ -99,16 +117,6 @@ class ReimbursementsController extends AppController
         }
     }
 
-    public function viewpdf($id = null) {
-        $trueFilename = WWW_ROOT . '2019-5-7 Test Gal1.png'; //FIXME
-        $filename = WWW_ROOT . 'tmp-reimb.png';
-        copy($trueFilename, $filename);
-        $response = $this->response->withFile($filename);
-        $this->log($filename, 'debug'); //FIXME remove
-        $this->set(['filename', 'webroot/' . 'tmp-reimb.png']);
-        return $response;
-    }
-
     /**
      * Edit method
      *
@@ -116,24 +124,24 @@ class ReimbursementsController extends AppController
      * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
-    {
-        $reimbursement = $this->Reimbursements->get($id, [
-            'contain' => []
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $reimbursement = $this->Reimbursements->patchEntity($reimbursement, $this->request->getData());
-            if ($this->Reimbursements->save($reimbursement)) {
-                $this->Flash->success(__('The reimbursement has been saved.'));
+    // public function edit($id = null)
+    // {
+    //     $reimbursement = $this->Reimbursements->get($id, [
+    //         'contain' => []
+    //     ]);
+    //     if ($this->request->is(['patch', 'post', 'put'])) {
+    //         $reimbursement = $this->Reimbursements->patchEntity($reimbursement, $this->request->getData());
+    //         if ($this->Reimbursements->save($reimbursement)) {
+    //             $this->Flash->success(__('The reimbursement has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The reimbursement could not be saved. Please, try again.'));
-        }
-        $users = $this->Reimbursements->Users->find('list', ['limit' => 200]);
-        $volunteerSites = $this->Reimbursements->VolunteerSites->find('list', ['limit' => 200]);
-        $this->set(compact('reimbursement', 'users', 'volunteerSites'));
-    }
+    //             return $this->redirect(['action' => 'index']);
+    //         }
+    //         $this->Flash->error(__('The reimbursement could not be saved. Please, try again.'));
+    //     }
+    //     $users = $this->Reimbursements->Users->find('list', ['limit' => 200]);
+    //     $volunteerSites = $this->Reimbursements->VolunteerSites->find('list', ['limit' => 200]);
+    //     $this->set(compact('reimbursement', 'users', 'volunteerSites'));
+    // }
 
     /**
      * Delete method
@@ -144,7 +152,9 @@ class ReimbursementsController extends AppController
      */
     public function delete($id = null) {
         //FIXME make sure its the user's reimbursement or the treasurer
-        $this->hardDelete($this->Reimbursements, $id, $this->redirect(['action' => 'index']), 'reimbursement');
+        $reimbursement = $this->Reimbursements->get($id);
+        if (!$reimbursement->submitted && !$reimbursement->approved && $this->ownerOrTreasurer($reimbursement))
+            $this->hardDelete($this->Reimbursements, $id, $this->redirect(['action' => 'index']), 'reimbursement');
     }
 
     /**
@@ -242,6 +252,11 @@ class ReimbursementsController extends AppController
         foreach ($otherRiderIDs as $num => $id)
             $otherRiderData[$num]['user_id'] = $id;
         unset($otherRiderData['user_ids']);
+    }
+
+    //FIXME very inefficient
+    private function ownerOrTreasurer($reimbursement) {
+        return $this->Auth->user('id') === $reimbursement->user_id || $this->isTreasurer();
     }
 
     //FIXME make this a component or something. 
