@@ -143,11 +143,12 @@ div.message {
     overflow: hidden;
     height: 50px;
     line-height: 2.5em;
+    font-size: 0.8rem;
 }
 
 div.message:before {
     line-height: 0px;
-    font-size: 20px;
+    font-size: 0.8rem;
     height: 12px;
     width: 12px;
     border-radius: 15px;
