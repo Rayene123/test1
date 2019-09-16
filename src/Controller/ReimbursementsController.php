@@ -100,7 +100,7 @@ class ReimbursementsController extends AppController
     {
         if ($id != null) {
             $reimbursement = $this->Reimbursements->get($id, [
-                'contain' => ['VolunteerSites', 'Receipts', 'Receipts.Documents', 'Users', 'Users.Locations']
+                'contain' => ['VolunteerSites', 'OtherRiders', 'OtherRiders.Users', 'Receipts', 'Receipts.Documents', 'Users', 'Users.Locations']
             ]);
             if (!\is_null($reimbursement) && $this->ownerOrTreasurer($reimbursement)) {
                 $isTreasurer = $this->isTreasurer();

@@ -24,6 +24,24 @@
             <p>Date: <?= h($reimbursement->date) ?></p>
             <p>Total: $<?= h($reimbursement->total) ?></p>
             <p>Site: <?= h($reimbursement->volunteer_site->name) ?></p>
+            <p>Other Riders: <?php 
+                $others = $reimbursement->other_riders;
+                if (!\is_null($others)) {
+                    if (count($others) === 0)
+                        echo "None";
+                    else {
+                        $result = "";
+                        foreach ($others as $k => $other) {
+                            $fullName = $other->user->full_name;
+                            if ($k == 0)
+                                $result .= $fullName;
+                            else
+                                $result .= ', ' . $fullName;
+                        }
+                        echo h($result);
+                    }
+                }
+            ?></p>
             <p>Created: <?= h($reimbursement->created) ?></p>
             <p>Modified: <?= h($reimbursement->modified) ?></p>
             <p>Deleted: <?= $reimbursement->deleted ? 'yes' : 'no' ?></p>
@@ -37,7 +55,7 @@
                 <?= $this->Html->link('View File', ['controller' => 'Documents', 'action' => 'view/' . $receipt->document_id], ['class' => 'doc-link']) ?>
                 <?= $this->Html->link('Download File', ['controller' => 'Documents', 'action' => 'download/' . $receipt->document_id], ['class' => 'doc-link']) ?>
                 <?php 
-                    if ($isTreasurer && !$reimbursement->submitted) {
+                    if ($isTreasurer && $reimbursement->submitted) {
                         $approved = $receipt->approved;
                         $class = $approved ? 'approved' : 'unapproved';
                         $text = $approved ?  "Mark Unapproved" : 'Mark Approved';
@@ -49,15 +67,14 @@
         </div>
         <div class='center-text submit-button-wrapper'>
         <?php 
-            if ($isTreasurer && $reimbursement->approved) {
-                $submitted = $reimbursement->submitted;
+            if ($isTreasurer && !$reimbursement->approved) {
                 $class = 'submit-button ';
-                $class .= $submitted ? 'submitted' : 'unsubmitted';
-                $text = $submitted ? 'Remove Submission Status' : 'Mark Submitted';
+                $class .= $reimbursement->submitted ? 'submitted' : 'unsubmitted';
+                $text = $reimbursement->submitted ? 'Remove Submission Status' : 'Mark Submitted';
                 echo $this->Html->link($text, ['controller' => 'Reimbursements', 'action' => 'toggle-submission/' . $reimbursement->id], ['class' => $class]);
-                if ($submitted) 
-                    echo "<p>" . h("Submission Date: " . $reimbursement->submitted) ."</p>";
             }
+            if ($reimbursement->submitted) 
+                echo "<p>" . h("Submission Date: " . $reimbursement->submitted) ."</p>";
         ?>
         </div>
         <div>
