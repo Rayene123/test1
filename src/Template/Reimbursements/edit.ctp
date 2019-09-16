@@ -10,7 +10,7 @@
         <li><?= $this->Form->postLink(
                 __('Delete'),
                 ['action' => 'delete', $reimbursement->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $reimbursement->id)]
+                ['confirm' => __('Are you sure you want to delete this reimbursement?')]
             )
         ?></li>
         <li><?= $this->Html->link(__('List Reimbursements'), ['action' => 'index']) ?></li>
