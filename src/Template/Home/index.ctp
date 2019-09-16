@@ -41,7 +41,7 @@
 </div> -->
     <div class="blue-background center-text">
         <h2>About Us</h2>
-        <p class="padding-before-sites">We work with Durham non-profits to teach music to elementary through high school children. More information about the awesome programs we work with is below.</p>
+        <p class="padding-before-sites">We work with Durham non-profits to teach music to elementary through high school children!</p>
     </div>
     <div class="sites-shift-up transparent">
         <?php 
