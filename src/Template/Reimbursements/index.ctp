@@ -55,7 +55,7 @@
                     <td><?= h($reimbursement->total) ?></td>
                     <td class='disappearing'><?= h($reimbursement->created) ?></td>
                     <td class='disappearing'><?= getSubmittedDate($reimbursement); ?></td>
-                    <td><?= conditionalImage($this->Html, $this->Html->image('checkbox'), $reimbursement->approved); ?></td>
+                    <td><?= conditionalImage($this->Html, $this->Html->image('checkbox.png'), $reimbursement->approved); ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $reimbursement->id]) ?>
                         <!--  FIXME uncomment when edit works < $this->Html->link(__('Edit'), ['action' => 'edit', $reimbursement->id]) ?> -->
