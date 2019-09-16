@@ -85,7 +85,7 @@
                 <h3 class="mobile-event" style='text-decoration: underline;'><?= $event->title . " - " . getEventDate($event) ?></h3>
                 <p class="mobile-event"><?= $event->description ?></p>
                 <div class='transparent mobile-event mobile-event-image-wrapper centered-horizontal'>
-                    <img class="mobile-event mobile-event-image" src=<?= $this->Url->image('tutoring-img1.jpg') ?> alt="event image"> <!-- FIXME actual image, add alt -->
+                    <img class="mobile-event mobile-event-image" src=<?= $event->document->full_path ?> alt=<?= $event->title ?>>
                 </div>
             <?php endforeach; ?>
         </div>
