@@ -103,6 +103,7 @@
             <?=  $this->Form->button(__('Submit'), ['type' => 'submit', 'class' => 'submit', 'formnovalidate' => true]); ?>
         </div>
         <?= $this->Form->end() ?>
+        <div class='center-text' style='margin-bottom: 1rem;'><h4>You can submit one reimbursement with up to four receipts per purchase date.</h4></div>
     </div>
     <p id='too-small'>The browser window is too small. Please expand the window on a computer to continue.</p>
 </div>
