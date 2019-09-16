@@ -48,8 +48,12 @@ class ReimbursementsController extends AppController
      *
      * @return \Cake\Http\Response|null
      */
-    public function all() {   
+    public function all() {
         $this->request->allowMethod(['post', 'get']);
+        if (!$this->isTreasurer()) {
+            $this->Flash->error(__("Only the treasurer can access this location."));
+            return $this->redirect($this->referer());
+        }
         $userID = null;
         if ($this->request->is('post')) {
             $requestedID = $this->request->getData('user_id');
@@ -77,12 +81,22 @@ class ReimbursementsController extends AppController
      */
     public function view($id = null)
     {
-        $reimbursement = $this->Reimbursements
-            ->get($id, [
-                'contain' => ['VolunteerSites', 'Receipts', 'Receipts.Documents']
+        if ($id != null) {
+            $reimbursement = $this->Reimbursements->get($id, [
+                'contain' => ['VolunteerSites', 'Receipts', 'Receipts.Documents', 'Users', 'Users.Locations']
             ]);
-
-        $this->set(compact('reimbursement'));
+            if (!\is_null($reimbursement) && ($this->Auth->user('id') === $reimbursement->user_id || $this->isTreasurer())) {
+                $this->set(compact('reimbursement'));
+            }
+            else {
+                $this->Flash->error(__("You don't have permissions to view this reimbursement"));
+                return $this->redirect($this->referer());
+            }
+        }
+        else {
+            $this->Flash->error(__("Reimbursement doesn't exist"));
+            return $this->redirect($this->referer());
+        }
     }
 
     public function viewpdf($id = null) {
@@ -149,8 +163,8 @@ class ReimbursementsController extends AppController
             $numReceipts = $data['numreceipts'];
             $includedDocuments = \array_slice($documents, 0, $numReceipts);
             $includedReceipts = \array_slice($receipts, 0, $numReceipts);
-            $this->patchAll($this->Documents, $includedDocuments, $data['documents']);
-            $this->patchAll($this->Receipts, $includedReceipts, $data['receipts']);
+            $this->patchAll($this->Documents, $includedDocuments, $data['documents'], true);
+            $this->patchAll($this->Receipts, $includedReceipts, $data['receipts'], false);
 
             $saveSuccess = $this->saveDocuments($includedDocuments);
 
@@ -193,9 +207,10 @@ class ReimbursementsController extends AppController
         return $entities;
     }
 
-    private function patchAll($table, &$entities, $data) {
+    private function patchAll($table, &$entities, $data, $areDocuments = false) {
+        $options = $areDocuments ? ['validate' => 'receipt'] : [];
         for ($k = 0; $k < count($entities); $k++)
-            $entities[$k] = $table->patchEntity($entities[$k], $data[$k]);
+            $entities[$k] = $table->patchEntity($entities[$k], $data[$k], $options);
     }
 
     private function saveDocuments($documents) {
@@ -227,5 +242,22 @@ class ReimbursementsController extends AppController
         foreach ($otherRiderIDs as $num => $id)
             $otherRiderData[$num]['user_id'] = $id;
         unset($otherRiderData['user_ids']);
+    }
+
+    //FIXME make this a component or something. 
+    //FIXME very inefficient
+    private function isTreasurer() {
+        $currentUser = $this->getCurrentUser();
+        return !\is_null($currentUser) && $currentUser->privilege->treasurer;
+    }
+
+    //FIXME make this a component or something. 
+    //FIXME very inefficient
+    private function getCurrentUser() {
+        return $this->Reimbursements->Users
+            ->find()
+            ->where(['user_id' => $this->Auth->user('id')])
+            ->contain(['Privileges'])
+            ->first();
     }
 }
