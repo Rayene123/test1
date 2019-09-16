@@ -34,6 +34,23 @@ class DocumentsController extends AppController
         return $this->redirect($this->referer());
     }
 
+    public function download($id = null) {
+        if (!\is_null($id)) {
+            $doc = $this->Documents->get($id);
+            if (!\is_null($doc) && ($this->Auth->user('id') === $doc->user_id || $this->isTreasurer())) {
+                $this->response = $this->response->withFile(WWW_ROOT . $doc->full_path, [
+                    'download' => true, 
+                    'name' => 'dmt-document' . '.' . $doc->extension
+                ]);
+                return $this->response;
+            }
+        }
+        $this->Flash->error(__("You can't download this file."));
+        return $this->redirect($this->referer());
+    }
+
+    
+
 
     //FIXME make this a component or something. 
     //FIXME very inefficient

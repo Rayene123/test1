@@ -35,6 +35,7 @@
                 <p>Amount: $<?= $receipt->amount ?></p>
                 <p>Approved: <?= $receipt->approved ? 'yes' : 'no' ?></p>
                 <?= $this->Html->link('View File', ['controller' => 'Documents', 'action' => 'view/' . $receipt->document_id], ['class' => 'doc-link']) ?>
+                <?= $this->Html->link('Download File', ['controller' => 'Documents', 'action' => 'download/' . $receipt->document_id], ['class' => 'doc-link']) ?>
                 <?php 
                     if ($isTreasurer && !$reimbursement->submitted) {
                         $approved = $receipt->approved;
