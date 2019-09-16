@@ -28,9 +28,9 @@
             <p>Modified: <?= h($reimbursement->modified) ?></p>
             <p>Deleted: <?= $reimbursement->deleted ? 'yes' : 'no' ?></p>
         </div>
-        <div style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+        <div class='card-container'>
             <?php foreach ($reimbursement->receipts as $k => $receipt): ?>
-            <div class='col-md-offset-2 col-md-3 center-text receipt-card'>
+            <div class='col-xs-offset-1 col-md-offset-2 col-md-3 center-text receipt-card'>
                 <h2>Receipt <?= $k + 1 ?></h4>
                 <p>Amount: $<?= $receipt->amount ?></p>
                 <p>Approved: <?= $receipt->approved ? 'yes' : 'no' ?></p>
