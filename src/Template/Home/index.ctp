@@ -103,7 +103,7 @@
                         "<h3>" . $event->title . "</h3>" .
                         "<p>" . $event->description . "</p>" .
                     "</div>";
-                    $img = $this->Url->image("tutoring-img1.jpg"); // FIXME actual image
+                    $img = $event->document->full_path;
                     $picSection = 
                     $this->Html->div('transparent event-block col-md-offset-0 col-md-4') .
                         makeImg('event-image centered-horizontal', $img, 'event image') . //FIXME add alt
@@ -115,11 +115,11 @@
                     if ($isFirst) {
                         echo makeEmptyDiv('dotted-beginning-line');
                     }
-                    $dateH4 = "<h4>" . getEventDate($event) . "</h4>";
                     if ($isLeft) {
                         echo $isFirst ? $this->Html->div('vline-left-first') : $this->Html->div('vline-left');
-                            echo makeEmptyDiv('mid-line-left');
-                            echo $dateH4;
+                            echo "<p class='left-date'>";
+                                echo getEventDate($event);
+                            echo "</p>";
                         echo "</div>";
                         if ($isLast) {
                             echo makeEmptyDiv('vline-left-extra');
@@ -131,10 +131,9 @@
                     }
                     else {
                         echo $this->Html->div('vline-right');
-                            echo $dateH4;
-                            echo $this->Html->div('mid-line-right');
-                                echo "test";
-                            echo "</div>";
+                            echo"<p class='right-date'>";
+                                echo getEventDate($event);
+                            echo "</p>";
                         echo "</div>";
                         if ($isLast) {
                             echo makeEmptyDiv('vline-right-extra');

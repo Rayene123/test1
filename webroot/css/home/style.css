@@ -89,6 +89,7 @@ div.inner-photo-wrapper {
 
 img.site-photo {
     height: 85%;
+    color: black;
 }
 
 div.site-card {
@@ -180,6 +181,28 @@ div.vline-left-first, div.vline-left, div.vline-left-extra {
 div.vline-right, div.vline-right-extra {
     width: 95%;
     border-right: 2px solid white;
+}
+
+p.left-date, p.right-date {
+    color: #111111;
+    background-color: #EEEEEE;
+    margin-top: 3rem;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    padding: 0.5rem;
+    display: block;
+}
+
+p.left-date {
+    text-align: left;
+    float: left;
+    border-radius: 0.2rem 0.5rem;
+}
+
+p.right-date {
+    text-align: right;
+    float: right;
+    border-radius: 0.5rem 0.2rem;
 }
 
 div.vline-left-first {
