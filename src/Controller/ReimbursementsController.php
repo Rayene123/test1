@@ -198,7 +198,7 @@ class ReimbursementsController extends AppController
                 $this->log($reimbursement->getErrors(), 'debug');
                 foreach ($includedDocuments as $document)
                     $this->log($document->getErrors(), 'debug');
-                $this->Flash->error(__("The reimbursement couldn't be saved"));
+                $this->Flash->error(__("The reimbursement couldn't be saved. Currently you can only save one reimbursement for a given date, so this may be the problem. "));
             }
         }
 
