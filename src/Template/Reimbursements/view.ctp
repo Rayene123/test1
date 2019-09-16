@@ -34,9 +34,30 @@
                 <h2>Receipt <?= $k + 1 ?></h4>
                 <p>Amount: $<?= $receipt->amount ?></p>
                 <p>Approved: <?= $receipt->approved ? 'yes' : 'no' ?></p>
-                <?= $this->Html->link('file', ['controller' => 'Documents', 'action' => 'view/' . $receipt->document_id], ['class' => 'doc-link']) ?>
+                <?= $this->Html->link('View File', ['controller' => 'Documents', 'action' => 'view/' . $receipt->document_id], ['class' => 'doc-link']) ?>
+                <?php 
+                    if ($isTreasurer && !$reimbursement->submitted) {
+                        $approved = $receipt->approved;
+                        $class = $approved ? 'approved' : 'unapproved';
+                        $text = $approved ?  "Mark Unapproved" : 'Mark Approved';
+                        echo $this->Html->link($text, ['controller' => 'Receipts', 'action' => 'toggle-approval/' . $receipt->id], ['class' => $class]);
+                    }
+                ?>
             </div>
             <?php endforeach; ?>
+        </div>
+        <div class='center-text submit-button-wrapper'>
+        <?php 
+            if ($isTreasurer && $reimbursement->approved) {
+                $submitted = $reimbursement->submitted;
+                $class = 'submit-button ';
+                $class .= $submitted ? 'submitted' : 'unsubmitted';
+                $text = $submitted ? 'Remove Submission Status' : 'Mark Submitted';
+                echo $this->Html->link($text, ['controller' => 'Reimbursements', 'action' => 'toggle-submission/' . $reimbursement->id], ['class' => $class]);
+                if ($submitted) 
+                    echo "<p>" . h("Submission Date: " . $reimbursement->submitted) ."</p>";
+            }
+        ?>
         </div>
         <div>
             <h2>Member Info</h2>
