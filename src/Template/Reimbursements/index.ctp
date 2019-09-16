@@ -9,9 +9,9 @@
     echo $this->Html->script(['table']);
 ?>
 <?php 
-    function conditionalImage($htmlHelper, $filename, $condition) {
+    function conditionalImage($htmlHelper, $img, $condition) {
         if ($condition) {
-            return $htmlHelper->div('table-img-wrapper') . $htmlHelper->image('tutoring-img1.jpg') . "</div>"; //FIXME approval image, and center
+            return $htmlHelper->div('table-img-wrapper centered-horizontal') . $img . "</div>";
         }
         return "";
     }
@@ -55,7 +55,7 @@
                     <td><?= h($reimbursement->total) ?></td>
                     <td class='disappearing'><?= h($reimbursement->created) ?></td>
                     <td class='disappearing'><?= getSubmittedDate($reimbursement); ?></td>
-                    <td><?= conditionalImage($this->Html, 'tutoring-img1.jpg', $reimbursement->approved);//FIXME real image, and center image ?></td>
+                    <td><?= conditionalImage($this->Html, $this->Html->image('checkbox'), $reimbursement->approved); ?></td>
                     <td class="actions">
                         <?= $this->Html->link(__('View'), ['action' => 'view', $reimbursement->id]) ?>
                         <!--  FIXME uncomment when edit works < $this->Html->link(__('Edit'), ['action' => 'edit', $reimbursement->id]) ?> -->
