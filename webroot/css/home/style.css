@@ -77,6 +77,16 @@ div.site-photo-wrapper {
     box-shadow: 0.1rem 0.1rem 0.1rem #242424;
 }
 
+div.site-photo-wrapper a {
+    height: 100%;
+    width: auto;
+}
+
+div.inner-photo-wrapper {
+    height: 100%;
+    width: auto;
+}
+
 img.site-photo {
     height: 85%;
 }

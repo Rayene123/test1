@@ -16,7 +16,7 @@
     }
 
     function makeImg($classes, $filename, $alt) {
-        return "<img class='" . $classes . "' src='" . $filename . "' alt '" . $alt . "'>";
+        return "<img class='" . $classes . "' src='" . $filename . "' alt='" . $alt . "'>";
     }
 ?>
 <div class='gray-background'>
@@ -55,11 +55,15 @@
                     $classes .= " col-centered";
                 }
                 echo $this->Html->div($classes);
-                    echo $this->Html->div('site-photo-wrapper centered-horizontal centered-vertical-wrapper');
-                        echo makeImg('site-photo centered-horizontal centered-vertical', $img, 'Site Image'); //FIXME add real alt 
+                    echo $this->Html->div('site-photo-wrapper centered-horizontal ');
+                        echo "<a href='" . $site->website . "' target='_blank'>";
+                            echo $this->Html->div('centered-vertical-wrapper centered-horizontal inner-photo-wrapper');
+                                echo makeImg('site-photo centered-horizontal centered-vertical', $img, h($site->name . ' logo'));
+                            echo "</div>";
+                        echo "</a>";
                     echo "</div>";
                     echo $this->Html->div('center-text transparent');
-                        echo "<h2 class='text-shadow'>" . $site->name . "</h2>";
+                        echo "<h2 class='text-shadow'>" . $this->Html->link($site->name, $site->website) . "</h2>";
                         echo "<p>" . $site->description . "</p>";
                     echo "</div>";
                 echo "</div>";
