@@ -173,11 +173,14 @@ class ReimbursementsController extends AppController
             $numReceipts = $data['numreceipts'];
             $includedDocuments = \array_slice($documents, 0, $numReceipts);
             $includedReceipts = \array_slice($receipts, 0, $numReceipts);
+
+            $namesUpdated = $this->updateDocNames($data['documents'], $data['date_string']);
             $this->patchAll($this->Documents, $includedDocuments, $data['documents'], true);
-            $this->patchAll($this->Receipts, $includedReceipts, $data['receipts'], false);
+            $this->patchAll($this->Receipts, $includedReceipts, $data['receipts'], false); //still patch for validation errors
 
-            $saveSuccess = $this->saveDocuments($includedDocuments);
-
+            $saveSuccess = false;
+            if ($namesUpdated)
+                $saveSuccess = $this->saveDocuments($includedDocuments);
             if ($saveSuccess) {
                 foreach ($includedReceipts as $k => $receipt)
                     $receipt->document_id = $includedDocuments[$k]->id;
@@ -198,7 +201,7 @@ class ReimbursementsController extends AppController
                 $this->log($reimbursement->getErrors(), 'debug');
                 foreach ($includedDocuments as $document)
                     $this->log($document->getErrors(), 'debug');
-                $this->Flash->error(__("The reimbursement couldn't be saved. Currently you can only save one reimbursement for a given date, so this may be the problem. "));
+                $this->Flash->error(__("The reimbursement couldn't be saved."));
             }
         }
 
@@ -215,6 +218,19 @@ class ReimbursementsController extends AppController
         for ($k = 0; $k < $num; $k++)
             $entities[] = $table->newEntity();
         return $entities;
+    }
+
+    private function updateDocNames(&$docData, $dateString) {
+        $newDocName = $this->Reimbursements->getDocumentDate($dateString);
+        $this->log($newDocName ? 'yes' : 'no', 'debug'); //FIXME remove
+        if ($newDocName === false)
+            return false;
+        $user = $this->Auth->user();
+        $newDocName .= '-' . $user['first_name'] . '-' . $user['last_name'] . '-';
+        for ($k = 0; $k < count($docData); $k++) {
+            $docData[$k]['filestuff']['new_name'] = $newDocName . ($k + 1);
+        }
+        return true;
     }
 
     private function patchAll($table, &$entities, $data, $areDocuments = false) {

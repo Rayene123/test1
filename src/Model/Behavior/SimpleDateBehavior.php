@@ -83,4 +83,13 @@ class SimpleDateBehavior extends Behavior {
         $maxDay = $monthDays[$monthInt];
         return $dayInt > 0 && $dayInt <= $maxDay;
     }
+
+    public function getDocumentDate($dateString) {
+        if (!$this->isValidDateString($dateString))
+            return false;
+        
+        $date = $this->buildDate($dateString);
+        $docDate = $date->year . '-' . $date->month . '-' . $date->day;
+        return $docDate;
+    }
 }

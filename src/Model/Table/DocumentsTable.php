@@ -118,10 +118,14 @@ class DocumentsTable extends Table
         if (isset($data['filestuff'])) {
             $filestuff = $data['filestuff'];
             $data['temp'] = $filestuff['tmp_name'];
+            if (isset($filestuff['new_name']))
+                $data['new_name'] = $filestuff['new_name'];
             $originalName = $filestuff['name'];
             if ($this->hasExtension($originalName)) {
                 $data['extension'] = $this->getExtension($originalName);
-                if (!isset($data['filename']))
+                if (isset($filestuff['new_name']))
+                    $data['filename'] = $filestuff['new_name'];
+                else if (!isset($data['filename']))
                     $data['filename'] = substr($originalName, 0, strrpos($originalName, '.')); //FIXME allow different name
             }
         }
@@ -139,7 +143,6 @@ class DocumentsTable extends Table
     }
 
     public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options) {
-        pr('saving doc'); //FIXME remove
         if (!$this->moveFile($entity)) {
             $event->stopPropagation();
             pr('had to stop event before doc save'); //FIXME remove
@@ -159,16 +162,13 @@ class DocumentsTable extends Table
                         return false;
 
                     $originalName = $value['name'];
-                    pr('here1'); //FIXME remove
                     $extensionError = $this->extensionErrorMessage($extensionsAllowed);;
                     if (!$this->hasExtension($originalName))
                         return $extensionError;
 
-                    pr('here2'); //FIXME remove
                     $extension = $this->getExtension($originalName);
                     if (!\in_array($extension, $extensionsAllowed, true))
                         return $extensionError;
-                    pr('here3'); //FIXME remove
                     return true;
                 },
                 'message' => "File couldn't be uploaded." 
@@ -202,12 +202,9 @@ class DocumentsTable extends Table
 
     private function moveFile($entity) {
         $path = $entity->full_path;
+        pr($path); //FIXME remove
         $temp = $entity->temp;
         $success = !is_null($path) && !is_null($temp) && move_uploaded_file($temp, $path);
-        pr($entity->filename); //FIXME remove
-        pr($entity->extension); //FIXME remove
-        pr($path); //FIXME remove
-        pr($temp); //FIXME remove
         // \unlink($entity->temp); FIXME uncomment? Could someone throw in a malicious temp file tho?
         return $success;
     }
