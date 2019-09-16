@@ -9,9 +9,9 @@
     echo $this->Html->script(['table', 'table-too-small']);
 ?>
 <?php 
-    function conditionalImage($htmlHelper, string $filename, $condition) {
+    function conditionalImage($htmlHelper, $img, $condition) {
         if ($condition) {
-            return $htmlHelper->div('table-img-wrapper') . $htmlHelper->image('tutoring-img1.jpg') . "</div>"; //FIXME approval image, and center
+            return $htmlHelper->div('table-img-wrapper centered-horizontal') . $img . "</div>";
         }
         return "";
     }
@@ -20,12 +20,20 @@
         $submitted = $reimbursement->submitted;
         return is_null($submitted) ? '' : $submitted->i18nFormat("MMMM d");
     }
+
+    function total($reimbursements, $adder) {
+        if (is_null($reimbursements))
+            return 0;
+        else {
+            return array_reduce($reimbursements->toArray(), $adder, 0);
+        }
+    }
 ?>
 <div class="reimbursements content">
     <h2 class='title-float'><?= __('Club Reimbursements') ?></h2>
     <div class='stats'>
-        <h4><?= __('Club Total Requested: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) {return $result + $reimb->total;}, 0) ?></h4>
-        <h4><?= __('Club Total Approved: $') . array_reduce($reimbursements->toArray(), function($result, $reimb) {return $result + $reimb->approved_total;}, 0) ?></h4> <!-- FIXME duplication with index.ctp-->
+        <h4><?= __('Club Total Requested: $') . total($reimbursements, function($result, $reimb) { return $result + $reimb->total; }) ?></h4>
+        <h4><?= __('Club Total Approved: $') . total($reimbursements, function($result, $reimb) {return $result + $reimb->approved_total;}, 0) ?></h4> <!-- FIXME duplication with index.ctp-->
     </div>
     <div class='filter'>
     <?php
@@ -68,7 +76,7 @@
                 <td><?= h($reimbursement->created) ?></td>
                 <td><?= h($reimbursement->total) ?></td>
                 <td><?= getSubmittedDate($reimbursement) ?></td>
-                <td><?= conditionalImage($this->Html, 'tutoring-img1.jpg', $reimbursement->approved);//FIXME real image, and center image ?></td>
+                <td><?= conditionalImage($this->Html, $this->Html->image('checkbox.png'), $reimbursement->approved); ?></td>
                 <td><?= h($reimbursement->deleted) ?></td>
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $reimbursement->id]) ?>
