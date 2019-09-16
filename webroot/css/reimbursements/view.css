@@ -1,0 +1,16 @@
+div.main-content .receipt-card-zone {
+    align-content: center;
+}
+
+div.main-content .receipt-card {
+    background-color: white;
+    color: black;
+    max-width: 80%;
+}
+
+.receipt-card a.doc-link {
+    background-color: rgb(17, 107, 244);
+    color: rgb(240, 240, 240);
+    padding: 0.2rem;
+    border-radius: 0.5rem;
+}
