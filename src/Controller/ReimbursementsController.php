@@ -179,8 +179,7 @@ class ReimbursementsController extends AppController
             $this->patchAll($this->Receipts, $includedReceipts, $data['receipts'], false); //still patch for validation errors
 
             $saveSuccess = false;
-            if ($namesUpdated)
-                $saveSuccess = $this->saveDocuments($includedDocuments);
+            $saveSuccess = $this->saveDocuments($includedDocuments);
             if ($saveSuccess) {
                 foreach ($includedReceipts as $k => $receipt)
                     $receipt->document_id = $includedDocuments[$k]->id;
