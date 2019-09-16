@@ -39,8 +39,8 @@
         </div>
     </div>
 </div> -->
-    <div class="blue-background center-text">
-        <h2>About Us</h2>
+    <div class="blue-background center-text about-us">
+        <h2 class='soft-text-shadow'>About Us</h2>
         <p class="padding-before-sites">We work with Durham non-profits to teach music to elementary through high school children!</p>
     </div>
     <div class="sites-shift-up transparent">
@@ -59,7 +59,7 @@
                         echo makeImg('site-photo centered-horizontal centered-vertical', $img, 'Site Image'); //FIXME add real alt 
                     echo "</div>";
                     echo $this->Html->div('center-text transparent');
-                        echo "<h2>" . $site->name . "</h2>";
+                        echo "<h2 class='text-shadow'>" . $site->name . "</h2>";
                         echo "<p>" . $site->description . "</p>";
                     echo "</div>";
                 echo "</div>";
@@ -69,7 +69,7 @@
     <div class="wax-seal transparent"><img class="centered-horizontal" src="img/dmt-logo.jpg" alt="DMT logo"></div>
 </div>
 <div class="events blue-background">
-    <h2>Events</h2>
+    <h2 class='soft-text-shadow'>Events</h2>
     <div id='events-content' class="transparent timeline-zone">
         <?php 
             if (count($events) == 0) {

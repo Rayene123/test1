@@ -18,6 +18,14 @@ h1, h2, h3, h4, h5, h6, p {
     padding-right: 0.5rem;
 }
 
+h1.soft-text-shadow, h2.soft-text-shadow, h3.soft-text-shadow, h4.soft-text-shadow, h5.soft-text-shadow {
+    text-shadow: 0.03rem 0.03rem  0.03rem  black; 
+}
+
+h1.text-shadow, h2.text-shadow, h3.text-shadow, h4.text-shadow, h5.text-shadow {
+    text-shadow: 0.05rem 0.05rem  0.05rem  black; 
+}
+
 div.main-content h1 {
     font-size: 1.75rem;
 }

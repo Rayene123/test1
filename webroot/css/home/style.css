@@ -60,6 +60,10 @@ div.huge-pic-scroll-button-wrapper > a, img {
     padding-bottom: 6rem; /* Want 2rem between pics plus what's half of site-photo-wrapper height */
 }
 
+div.about-us {
+    box-shadow: 0 0rem 0.1rem #777777;
+}
+
 div.sites-shift-up{
     position: relative;
     margin-top: -4rem; /* half photo-wrapper height */
@@ -70,6 +74,7 @@ div.site-photo-wrapper {
     border-radius: 20px;
     height: 8rem;
     width: 13rem;
+    box-shadow: 0.1rem 0.1rem 0.1rem #242424;
 }
 
 img.site-photo {
@@ -88,14 +93,17 @@ div.wax-seal {
 }
 
 .wax-seal > img {
-    height: 100%;
+    height: 95%;
     width: auto;
     border-radius: 1.5rem; /* half of wax-seal height */
+    box-shadow: 0.07rem 0.1rem 0.05rem #222222;
+    z-index: 999;
 }
 
 div.events {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
+    box-shadow: 0 0rem 0.1rem #222222;
 }
 
 div.timeline-zone {
