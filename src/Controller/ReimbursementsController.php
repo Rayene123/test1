@@ -53,9 +53,9 @@ class ReimbursementsController extends AppController
             $shouldSubmit = !$reimbursement->submitted;
             $reimbursement->submitted = $shouldSubmit ? new FrozenTime() : null;
             if ($this->Reimbursements->save($reimbursement)) 
-                $this->Flash->success("Reimbursement marked as submitted.");
+                $this->Flash->success("Reimbursement marked as " . ($shouldSubmit ? 'submitted.' : 'unsubmitted.'));
             else
-                $this->Flash->error("Reimbursement couldn't be marked as submitted.");
+                $this->Flash->error("Reimbursement submission status couldn't be updated.");
         }
         return $this->redirect($this->referer());
     }

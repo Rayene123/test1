@@ -30,9 +30,9 @@ class ReceiptsController extends AppController
             $shouldApprove = !$receipt->approved;
             $receipt->approved = $shouldApprove ? true : false;
             if ($this->Receipts->save($receipt)) 
-                $this->Flash->success("Receipt marked as approved.");
+                $this->Flash->success("Receipt marked as " . ($shouldApprove ? "approved." : "unapproved."));
             else
-                $this->Flash->error("Receipt marked as unapproved.");
+                $this->Flash->error("Receipt approval couldn't be updated.");
         }
         return $this->redirect($this->referer());
     }
