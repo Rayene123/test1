@@ -34,7 +34,13 @@ class EventsTable extends Table
     {
         parent::initialize($config);
         $this->setDisplayField('title');
-        $this->addBehavior('Timestamp');
+        $this->addBehavior('Timestamp', [
+            'events' => [
+                'Model.beforeSave' => [
+                    'created' => 'new'
+                ]
+            ]
+        ]);
         $this->belongsTo('Documents')->setJoinType('INNER');
     }
 

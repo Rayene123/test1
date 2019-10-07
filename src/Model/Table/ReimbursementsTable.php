@@ -38,8 +38,13 @@ class ReimbursementsTable extends Table
     {
         parent::initialize($config);
 
-        $this->addBehavior('Timestamp');
-
+        $this->addBehavior('Timestamp', [
+            'events' => [
+                'Model.beforeSave' => [
+                    'created' => 'new'
+                ]
+            ]
+        ]);
         $this->belongsTo('Users')
             ->setJoinType('INNER');
         $this->belongsTo('VolunteerSites')

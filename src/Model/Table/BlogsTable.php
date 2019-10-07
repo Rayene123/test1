@@ -35,7 +35,13 @@ class BlogsTable extends Table
     {
         parent::initialize($config);
         $this->setDisplayField('title');
-        $this->addBehavior('Timestamp');
+        $this->addBehavior('Timestamp', [
+            'events' => [
+                'Model.beforeSave' => [
+                    'created' => 'new'
+                ]
+            ]
+        ]);
         $this->belongsTo('Users')->setJoinType('INNER');
         $this->belongsTo('PublicPosts')->setJoinType('INNER');
     }
