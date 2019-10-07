@@ -81,7 +81,16 @@
                 <td class="actions">
                     <?= $this->Html->link(__('View'), ['action' => 'view', $reimbursement->id]) ?>
                     <!--  FIXME uncomment when edit works < $this->Html->link(__('Edit'), ['action' => 'edit', $reimbursement->id]) ?> -->
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $reimbursement->id], ['confirm' => __('Are you sure you want to delete this reimbursement?')]) ?>
+                    <?php 
+                        if (!$reimbursement->submitted && !$reimbursement->approved) {
+                            echo $this->Form->postLink(__('Delete'), [
+                                'action' => 'delete', 
+                                $reimbursement->id
+                            ], [
+                                'confirm' => __('Are you sure you want to delete this reimbursement?')
+                            ]);
+                        }
+                    ?>
                 </td>
             </tr>
             <?php endforeach; ?>
