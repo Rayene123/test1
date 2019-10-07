@@ -67,7 +67,11 @@
         </div>
         <div class='center-text submit-button-wrapper'>
         <?php 
-            if ($isTreasurer && !$reimbursement->approved) {
+            $anyApproved = false;
+            foreach ($reimbursement->receipts as $receipt) {
+                $anyApproved = $anyApproved || $receipt->approved;
+            }
+            if ($isTreasurer && !$anyApproved) {
                 $class = 'submit-button ';
                 $class .= $reimbursement->submitted ? 'submitted' : 'unsubmitted';
                 $text = $reimbursement->submitted ? 'Remove Submission Status' : 'Mark Submitted';
