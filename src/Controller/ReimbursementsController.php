@@ -154,7 +154,7 @@ class ReimbursementsController extends AppController
         //FIXME make sure its the user's reimbursement or the treasurer
         $reimbursement = $this->Reimbursements->get($id);
         if (!$reimbursement->submitted && !$reimbursement->approved && $this->ownerOrTreasurer($reimbursement))
-            $this->hardDelete($this->Reimbursements, $id, $this->redirect(['action' => 'index']), 'reimbursement');
+            $this->hardDelete($this->Reimbursements, $id, $this->redirect($this->referer()), 'reimbursement');
     }
 
     /**
@@ -200,6 +200,8 @@ class ReimbursementsController extends AppController
                 $this->log($reimbursement->getErrors(), 'debug');
                 foreach ($includedDocuments as $document)
                     $this->log($document->getErrors(), 'debug');
+                $this->log("data: ", 'debug');
+                $this->log($data, 'debug');
                 $this->Flash->error(__("The reimbursement couldn't be saved."));
             }
         }
