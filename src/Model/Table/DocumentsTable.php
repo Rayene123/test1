@@ -188,7 +188,7 @@ class DocumentsTable extends Table
     }
 
     private function getExtension($originalName) {
-        return substr($originalName, strrpos($originalName, '.') + 1);
+        return strtolower(substr($originalName, strrpos($originalName, '.') + 1));
     }
 
     private function hasExtension($filename) {
